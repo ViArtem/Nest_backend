@@ -11,8 +11,8 @@ import { Categories } from "./categories.model";
   providers: [
     CategoriesService,
     {
-      provide: "CATEGORIES_REPOSITORY", // Ім'я провайдера
-      useValue: Categories, // Клас моделі
+      provide: "CATEGORIES_REPOSITORY",
+      useValue: Categories,
     },
   ],
   imports: [SequelizeModule.forFeature([User, Categories])],

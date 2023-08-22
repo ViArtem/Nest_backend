@@ -5,7 +5,9 @@ import {
   ForeignKey,
   Model,
   Table,
+  HasMany,
 } from "sequelize-typescript";
+import { Products } from "src/products/product.model";
 import { User } from "src/users/users.model";
 
 interface CategoriesCreationAttrs {
@@ -37,4 +39,7 @@ export class Categories extends Model<Categories, CategoriesCreationAttrs> {
 
   @BelongsTo(() => User)
   author: User;
+
+  @HasMany(() => Products)
+  categories: Products[];
 }

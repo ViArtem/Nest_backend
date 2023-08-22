@@ -17,7 +17,8 @@ import { CategoriesModule } from "./categories/categories.module";
 import { Categories } from "./categories/categories.model";
 import { GetUserIdFromJwtMiddleware } from "./middlewares/get-id-from-jwt.middleware";
 import { CategoriesController } from "./categories/categories.controller";
-
+import { ProductsModule } from "./products/products.module";
+import { Products } from "./products/product.model";
 
 @Module({
   controllers: [],
@@ -33,7 +34,7 @@ import { CategoriesController } from "./categories/categories.controller";
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DB,
-      models: [User, Role, UserRole, Categories],
+      models: [User, Role, UserRole, Categories, Products],
       autoLoadModels: true,
     }),
 
@@ -54,6 +55,7 @@ import { CategoriesController } from "./categories/categories.controller";
     ]),
     AuthModule,
     CategoriesModule,
+    ProductsModule,
   ],
 })
 export class AppModule implements NestModule {
