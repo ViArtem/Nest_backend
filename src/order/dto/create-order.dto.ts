@@ -14,7 +14,7 @@ class ProductInfoDto {
   readonly price: number;
 }
 
-export class CreateCategoryDto {
+export class CreateOrderDto {
   @IsNumber()
   readonly owner: number;
 
