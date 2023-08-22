@@ -1,33 +1,18 @@
-import { IsArray, IsNumber, IsString, ValidateNested } from "class-validator";
-
-class ProductInfoDto {
-  @IsString()
-  readonly id: string;
-
-  @IsString()
-  readonly productName: string;
-
-  @IsNumber()
-  readonly quantity: number;
-
-  @IsNumber()
-  readonly price: number;
-}
+import { IsString } from 'class-validator';
+import { ProductOnOrder } from '../productOnOrder.model';
 
 export class CreateOrderDto {
-  @IsNumber()
-  readonly owner: number;
+  @IsString()
+  readonly user_id: string;
 
-  @IsString({ message: "Value must be a string" })
+  @IsString({ message: 'Value must be a string' })
   readonly client: string;
 
-  @IsString({ message: "Value must be a string" })
+  @IsString({ message: 'Value must be a string' })
   readonly addresses: string;
 
-  @IsString({ message: "Value must be a string" })
+  @IsString({ message: 'Value must be a string' })
   readonly clientNumber: string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  readonly productInfo: ProductInfoDto[];
+  readonly products: ProductOnOrder[];
 }
