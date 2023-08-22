@@ -17,6 +17,7 @@ import { CategoriesModule } from "./categories/categories.module";
 import { Categories } from "./categories/categories.model";
 import { GetUserIdFromJwtMiddleware } from "./middlewares/get-id-from-jwt.middleware";
 import { CategoriesController } from "./categories/categories.controller";
+import { OrderModule } from './order/order.module';
 
 
 @Module({
@@ -54,6 +55,7 @@ import { CategoriesController } from "./categories/categories.controller";
     ]),
     AuthModule,
     CategoriesModule,
+    OrderModule,
   ],
 })
 export class AppModule implements NestModule {
