@@ -18,6 +18,8 @@ import { Categories } from "./categories/categories.model";
 import { GetUserIdFromJwtMiddleware } from "./middlewares/get-id-from-jwt.middleware";
 import { CategoriesController } from "./categories/categories.controller";
 import { OrderModule } from './order/order.module';
+import { Order } from "./order/order.model";
+import { ProductOnOrder } from "./order/productOnOrder.model";
 
 
 @Module({
@@ -34,7 +36,7 @@ import { OrderModule } from './order/order.module';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DB,
-      models: [User, Role, UserRole, Categories],
+      models: [User, Role, UserRole, Categories, Order, ProductOnOrder],
       autoLoadModels: true,
     }),
 
