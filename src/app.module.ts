@@ -19,6 +19,8 @@ import { GetUserIdFromJwtMiddleware } from "./middlewares/get-id-from-jwt.middle
 import { CategoriesController } from "./categories/categories.controller";
 import { ProductsModule } from "./products/products.module";
 import { Products } from "./products/product.model";
+import { ProductsController } from "./products/products.controller";
+import { FilesModule } from './files/files.module';
 
 @Module({
   controllers: [],
@@ -56,10 +58,13 @@ import { Products } from "./products/product.model";
     AuthModule,
     CategoriesModule,
     ProductsModule,
+    FilesModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(GetUserIdFromJwtMiddleware).forRoutes(CategoriesController);
+    consumer
+      .apply(GetUserIdFromJwtMiddleware)
+      .forRoutes(CategoriesController, ProductsController);
   }
 }

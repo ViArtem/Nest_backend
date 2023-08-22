@@ -7,6 +7,7 @@ import {
   Table,
 } from "sequelize-typescript";
 import { Categories } from "src/categories/categories.model";
+import { User } from "src/users/users.model";
 
 interface ProductsCreationAttrs {
   id: string;
@@ -32,6 +33,12 @@ export class Products extends Model<Products, ProductsCreationAttrs> {
   @Column({ type: DataType.STRING, allowNull: false, unique: true })
   name: string;
 
+  @Column({ type: DataType.STRING, allowNull: false })
+  description: string;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  img: string;
+
   @Column({ type: DataType.INTEGER, allowNull: false })
   price: number;
 
@@ -42,9 +49,16 @@ export class Products extends Model<Products, ProductsCreationAttrs> {
   quantity: number;
 
   @ForeignKey(() => Categories)
-  @Column({ field: "user_id", type: DataType.STRING, allowNull: false })
+  @Column({ field: "category_id", type: DataType.STRING, allowNull: false })
   categoryId: string;
 
+  @ForeignKey(() => User)
+  @Column({ field: "user_id", type: DataType.STRING, allowNull: false })
+  userId: string;
+
   @BelongsTo(() => Categories)
-  author: Categories;
+  category: Categories;
+
+  @BelongsTo(() => User)
+  author: User;
 }

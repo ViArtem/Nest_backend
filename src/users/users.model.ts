@@ -7,6 +7,7 @@ import {
   Table,
 } from "sequelize-typescript";
 import { Categories } from "src/categories/categories.model";
+import { Products } from "src/products/product.model";
 import { Role } from "src/roles/role.model";
 import { UserRole } from "src/roles/user-role.model";
 
@@ -47,4 +48,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasMany(() => Categories)
   categories: Categories[];
+
+  @HasMany(() => Products)
+  products: Products[];
 }

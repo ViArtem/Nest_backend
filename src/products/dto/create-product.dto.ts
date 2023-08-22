@@ -23,4 +23,7 @@ export class CreateProductDto {
 
   @IsString({ message: "Value must be a string" })
   readonly categoryId: string;
+
+  @IsString({ message: "Value must be a string" })
+  readonly userId: string;
 }
