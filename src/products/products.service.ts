@@ -1,4 +1,10 @@
-import { Inject, Injectable } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+} from "@nestjs/common";
 import { Products } from "./product.model";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { GetAllCategoryProductDto } from "./dto/get-all-category-product.dto";
@@ -18,7 +24,15 @@ export class ProductsService {
     image: any
   ): Promise<object> {
     try {
-      const img = await this.fileServise.saveImage(image);
+      const checkProduct = await this.productsRepository.findOne({
+        where: { name: createProductDto.name, userId: createProductDto.userId },
+      });
+
+      if (checkProduct) {
+        throw new BadRequestException("This product already exists");
+      }
+
+      const img = await this.fileServise.saveFile(image);
 
       const product = await this.productsRepository.create({
         ...createProductDto,
@@ -28,6 +42,10 @@ export class ProductsService {
       return product;
     } catch (error) {
       console.log(error);
+      throw new HttpException(
+        "Error when creating a product",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
@@ -44,13 +62,36 @@ export class ProductsService {
       return products;
     } catch (error) {
       console.log(error);
+      throw new HttpException(
+        "Error when getting a product",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
   //
   async delete(deleteProductDto: DeleteProductDto) {
     try {
-    } catch (error) {}
+      const checkProduct = await this.productsRepository.findOne({
+        where: { id: deleteProductDto.id, userId: deleteProductDto.userId },
+      });
+
+      if (!checkProduct) {
+        throw new BadRequestException("This product does not exist");
+      }
+
+      const deleteImg = await this.fileServise.deleteFile(checkProduct.img);
+
+      const product = await checkProduct.destroy();
+
+      return checkProduct;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(
+        "Error when deleting a product",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   //

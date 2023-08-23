@@ -1,4 +1,5 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsString } from "class-validator";
+
 export class DeleteProductDto {
   @IsString({ message: "Value must be a string" })
   readonly id: string;
@@ -7,5 +8,5 @@ export class DeleteProductDto {
   readonly name: string;
 
   @IsString({ message: "Value must be a string" })
-  readonly categoryId: string;
+  readonly userId: string;
 }
