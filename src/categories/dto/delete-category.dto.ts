@@ -4,5 +4,8 @@ export class DeleteCategoryDto {
   readonly userId: string;
 
   @IsString({ message: "Value must be a string" })
+  readonly img: string;
+
+  @IsString({ message: "Value must be a string" })
   readonly name: string;
 }

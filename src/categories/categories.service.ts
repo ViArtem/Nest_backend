@@ -11,15 +11,17 @@ import { CreateCategoryDto } from "./dto/create-category.dto";
 import { GetCategoriesDto } from "./dto/get-categories.dto";
 import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { FilesService } from "src/files/files.service";
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @Inject("CATEGORIES_REPOSITORY")
-    private categoryRepository: typeof Categories
+    private categoryRepository: typeof Categories,
+    private filesService: FilesService
   ) {}
 
-  async create(categoryData: CreateCategoryDto): Promise<object> {
+  async create(categoryData: CreateCategoryDto, image: any): Promise<object> {
     try {
       const checkCategory = await this.categoryRepository.findOne({
         where: {
@@ -31,8 +33,12 @@ export class CategoriesService {
       if (checkCategory) {
         throw new BadRequestException("This category already exists");
       }
+      const fileName = await this.filesService.saveFile(image);
 
-      const category = await this.categoryRepository.create(categoryData);
+      const category = await this.categoryRepository.create({
+        ...categoryData,
+        img: fileName,
+      });
 
       return category;
     } catch (error) {
@@ -89,6 +95,8 @@ export class CategoriesService {
       if (!category) {
         throw new NotFoundException("Category not found");
       }
+
+      this.filesService.deleteFile(deleteCategoryDto.img);
 
       await category.destroy();
       return category;

@@ -1,4 +1,4 @@
-import { Injectable, Inject } from "@nestjs/common";
+import { Injectable, Inject, HttpException } from "@nestjs/common";
 import { User } from "./users.model";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { DeleteUserDto } from "./dto/delete-user.dto";
@@ -12,37 +12,59 @@ export class UsersService {
   ) {}
 
   async createUser(userData: CreateUserDto) {
-    const user = await this.userRepository.create(userData);
-    const role = await this.roleServise.getRoleByValue("MANAGER");
+    try {
+      const user = await this.userRepository.create(userData);
+      const role = await this.roleServise.getRoleByValue("MANAGER");
 
-    await user.$set("roles", [role.id]);
-    user["roles"] = [role];
-    return user;
+      await user.$set("roles", [role.id]);
+      user["roles"] = [role];
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   async getAllUsers() {
-    const users = await this.userRepository.findAll({ include: { all: true } });
+    try {
+      const users = await this.userRepository.findAll({
+        include: { all: true },
+      });
 
-    return users;
+      return users;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   async deleteUser(userData: DeleteUserDto) {
-    const deleteStatus = await this.userRepository.destroy({
-      where: {
-        id: userData.userId,
-      },
-    });
-    return deleteStatus;
+    try {
+      const deleteStatus = await this.userRepository.destroy({
+        where: {
+          id: userData.userId,
+        },
+      });
+      return deleteStatus;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   async getUserByEmail(email: string) {
-    const user = this.userRepository.findOne({
-      where: {
-        email,
-      },
-      include: { all: true },
-    });
+    try {
+      const user = this.userRepository.findOne({
+        where: {
+          email,
+        },
+        include: { all: true },
+      });
 
-    return user;
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
   }
 }

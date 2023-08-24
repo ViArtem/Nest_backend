@@ -26,51 +26,66 @@ export class AuthService {
 
   //
   async registration(userDto: CreateUserDto) {
-    const candidate = await this.userService.getUserByEmail(userDto.email);
+    try {
+      const candidate = await this.userService.getUserByEmail(userDto.email);
 
-    if (candidate) {
-      throw new HttpException(
-        "User whith this email already exist",
-        HttpStatus.BAD_REQUEST
-      );
+      if (candidate) {
+        throw new HttpException(
+          "User whith this email already exist",
+          HttpStatus.BAD_REQUEST
+        );
+      }
+
+      const hashPassword = await bcrypt.hash(userDto.password, 5);
+
+      const user = await this.userService.createUser({
+        ...userDto,
+        password: hashPassword,
+      });
+
+      return this.generateTokens(user);
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
-
-    const hashPassword = await bcrypt.hash(userDto.password, 5);
-
-    const user = await this.userService.createUser({
-      ...userDto,
-      password: hashPassword,
-    });
-
-    return this.generateTokens(user);
   }
 
   private async generateTokens(user: User) {
-    const payload = {
-      id: user.id,
-      role: user.roles,
-    };
+    try {
+      const payload = {
+        id: user.id,
+        role: user.roles,
+      };
 
-    return {
-      token: this.jwtService.sign(payload),
-    };
+      return {
+        token: this.jwtService.sign(payload),
+      };
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
   }
 
   private async userValidate(userDto: LogInUserDto) {
-    const user = await this.userService.getUserByEmail(userDto.email);
+    try {
+      const user = await this.userService.getUserByEmail(userDto.email);
 
-    if (!user) {
+      if (!user) {
+        throw new UnauthorizedException("Email or password incorrect");
+      }
+      const passwordCompare = await bcrypt.compare(
+        userDto.password,
+        user.password
+      );
+
+      if (user && passwordCompare) {
+        return user;
+      }
+
       throw new UnauthorizedException("Email or password incorrect");
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
-    const passwordCompare = await bcrypt.compare(
-      userDto.password,
-      user.password
-    );
-
-    if (user && passwordCompare) {
-      return user;
-    }
-
-    throw new UnauthorizedException("Email or password incorrect");
   }
 }

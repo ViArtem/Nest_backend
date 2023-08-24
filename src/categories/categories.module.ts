@@ -5,7 +5,8 @@ import { SequelizeModule } from "@nestjs/sequelize";
 
 import { User } from "src/users/users.model";
 import { Categories } from "./categories.model";
-import { ProductsService } from "src/products/products.service";
+
+import { FilesModule } from "src/files/files.module";
 
 @Module({
   controllers: [CategoriesController],
@@ -16,7 +17,7 @@ import { ProductsService } from "src/products/products.service";
       useValue: Categories,
     },
   ],
-  imports: [SequelizeModule.forFeature([User, Categories])],
+  imports: [SequelizeModule.forFeature([User, Categories]), FilesModule],
   exports: [CategoriesService],
 })
 export class CategoriesModule {}

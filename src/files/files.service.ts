@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import * as fs from "fs/promises";
-import { existsSync, stat } from "fs";
+import { existsSync } from "fs";
 import * as path from "path";
 import * as uuid from "uuid";
 
@@ -45,19 +45,6 @@ export class FilesService {
       console.log(error);
 
       throw new HttpException("", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
-
-  async checkFileExist(fileName: string): Promise<object> {
-    try {
-      await fs.stat(path.resolve("src", "images", fileName));
-
-      return { success: true };
-    } catch (error) {
-      console.log(error);
-      return {
-        message: error.message,
-      };
     }
   }
 }

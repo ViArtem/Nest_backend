@@ -15,6 +15,7 @@ interface CategoriesCreationAttrs {
   userId: string;
   name: string;
   markup: number;
+  img: string;
 }
 
 @Table({ tableName: "categories" })
@@ -32,6 +33,9 @@ export class Categories extends Model<Categories, CategoriesCreationAttrs> {
 
   @Column({ type: DataType.INTEGER, allowNull: false })
   markup: number;
+
+  @Column({ type: DataType.STRING, allowNull: false })
+  img: string;
 
   @ForeignKey(() => User)
   @Column({ field: "user_id", type: DataType.STRING, allowNull: false })
