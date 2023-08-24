@@ -7,6 +7,7 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  Patch,
 } from "@nestjs/common";
 import { CategoriesService } from "./categories.service";
 import { CreateCategoryDto } from "./dto/create-category.dto";
@@ -14,6 +15,7 @@ import { GetCategoriesDto } from "./dto/get-categories.dto";
 import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { UpdateImageDto } from "./dto/update-category-image.dto";
 
 @Controller("category")
 export class CategoriesController {
@@ -40,8 +42,14 @@ export class CategoriesController {
     return this.categoriesService.update(updateCategoryDto);
   }
 
+  @UseInterceptors(FileInterceptor("image"))
+  @Patch("update/image")
+  updateImage(@Body() updateImageDto: UpdateImageDto, @UploadedFile() image) {
+    return this.categoriesService.updateImage(updateImageDto, image);
+  }
+
   @Post("count")
-  getCategoryCount(@Body() userId: object) {
-    return this.categoriesService.count(userId);
+  getCategoryCount(@Body() userData: object) {
+    return this.categoriesService.count(userData);
   }
 }

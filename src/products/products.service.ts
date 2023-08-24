@@ -20,7 +20,7 @@ export class ProductsService {
   constructor(
     @Inject("PRODUCTS_REPOSITORY")
     private productsRepository: typeof Products,
-    private fileServise: FilesService,
+    private filesService: FilesService,
     private categoryService: CategoriesService
   ) {}
 
@@ -38,7 +38,7 @@ export class ProductsService {
         throw new BadRequestException("This product already exists");
       }
 
-      const img = await this.fileServise.saveFile(image);
+      const img = await this.filesService.saveFile(image);
 
       if (createProductDto.price === 0) {
         const category = await this.categoryService.getById(
@@ -91,7 +91,7 @@ export class ProductsService {
         throw new BadRequestException("This product does not exist");
       }
 
-      await this.fileServise.deleteFile(checkProduct.img);
+      await this.filesService.deleteFile(checkProduct.img);
 
       await checkProduct.destroy();
 
@@ -145,9 +145,9 @@ export class ProductsService {
         },
       });
 
-      await this.fileServise.deleteFile(product.img);
+      await this.filesService.deleteFile(product.img);
 
-      const imageName = await this.fileServise.saveFile(image);
+      const imageName = await this.filesService.saveFile(image);
 
       product.img = imageName;
 
@@ -174,6 +174,23 @@ export class ProductsService {
       );
 
       return product;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async count(userData: object) {
+    try {
+      const userId = userData["userId"];
+
+      const productCount = await this.productsRepository.count({
+        where: { userId },
+      });
+
+      return {
+        productCount,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

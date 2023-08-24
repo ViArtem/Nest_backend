@@ -12,6 +12,7 @@ import { GetCategoriesDto } from "./dto/get-categories.dto";
 import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { FilesService } from "src/files/files.service";
+import { UpdateImageDto } from "./dto/update-category-image.dto";
 
 @Injectable()
 export class CategoriesService {
@@ -99,6 +100,7 @@ export class CategoriesService {
       this.filesService.deleteFile(deleteCategoryDto.img);
 
       await category.destroy();
+
       return category;
     } catch (error) {
       if (error.name === "SequelizeError") {
@@ -110,7 +112,7 @@ export class CategoriesService {
   }
 
   //
-  async update(updateCategoryDto: UpdateCategoryDto) {
+  async update(updateCategoryDto: UpdateCategoryDto): Promise<object> {
     try {
       const checkCategory = await this.categoryRepository.findOne({
         where: {
@@ -123,7 +125,7 @@ export class CategoriesService {
         throw new BadRequestException("This category already exists");
       }
 
-      const category = await this.categoryRepository.update(updateCategoryDto, {
+      await this.categoryRepository.update(updateCategoryDto, {
         where: { id: updateCategoryDto.id },
       });
 
@@ -133,6 +135,34 @@ export class CategoriesService {
         throw new NotAcceptableException(error.parent.sqlMessage);
       }
 
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  //
+  async updateImage(updateImage: UpdateImageDto, image: any): Promise<object> {
+    try {
+      const category = await this.categoryRepository.findOne({
+        where: {
+          userId: updateImage.userId,
+          id: updateImage.id,
+        },
+      });
+
+      if (!category) {
+        throw new BadRequestException("This category don't exists");
+      }
+
+      await this.filesService.deleteFile(category.img);
+
+      const imageName = await this.filesService.saveFile(image);
+
+      category.img = imageName;
+
+      await category.save();
+      return category;
+    } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
     }
@@ -156,6 +186,7 @@ export class CategoriesService {
     }
   }
 
+  //
   async getById(categoryId: string) {
     try {
       const category = this.categoryRepository.findOne({
