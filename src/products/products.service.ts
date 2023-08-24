@@ -3,22 +3,28 @@ import {
   Injectable,
   BadRequestException,
   HttpException,
-  HttpStatus,
 } from "@nestjs/common";
 import { Products } from "./product.model";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { GetAllCategoryProductDto } from "./dto/get-all-category-product.dto";
 import { DeleteProductDto } from "./dto/delete-product.dto";
 import { FilesService } from "src/files/files.service";
+import { UpdateProductImageDto } from "./dto/update-product-image.dto";
+import { UpdateProductDto } from "./dto/udate-product.dto";
+
+import * as uuid from "uuid";
+import { CategoriesService } from "src/categories/categories.service";
 
 @Injectable()
 export class ProductsService {
   constructor(
     @Inject("PRODUCTS_REPOSITORY")
     private productsRepository: typeof Products,
-    private fileServise: FilesService
+    private fileServise: FilesService,
+    private categoryService: CategoriesService
   ) {}
 
+  //
   async create(
     createProductDto: CreateProductDto,
     image: any
@@ -34,7 +40,18 @@ export class ProductsService {
 
       const img = await this.fileServise.saveFile(image);
 
+      if (createProductDto.price === 0) {
+        const category = await this.categoryService.getById(
+          createProductDto.categoryId
+        );
+
+        createProductDto.price =
+          Number(createProductDto.purchasePrice) +
+          (createProductDto.purchasePrice / 100) * category.markup;
+      }
+
       const product = await this.productsRepository.create({
+        id: uuid.v4(),
         ...createProductDto,
         img,
       });
@@ -42,10 +59,7 @@ export class ProductsService {
       return product;
     } catch (error) {
       console.log(error);
-      throw new HttpException(
-        "Error when creating a product",
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -62,10 +76,7 @@ export class ProductsService {
       return products;
     } catch (error) {
       console.log(error);
-      throw new HttpException(
-        "Error when getting a product",
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -80,23 +91,92 @@ export class ProductsService {
         throw new BadRequestException("This product does not exist");
       }
 
-      const deleteImg = await this.fileServise.deleteFile(checkProduct.img);
+      await this.fileServise.deleteFile(checkProduct.img);
 
-      const product = await checkProduct.destroy();
+      await checkProduct.destroy();
 
       return checkProduct;
     } catch (error) {
       console.log(error);
-      throw new HttpException(
-        "Error when deleting a product",
-        HttpStatus.INTERNAL_SERVER_ERROR
-      );
+
+      throw new HttpException(error.message, error.status);
     }
   }
 
   //
-  async update(updateProductDto: DeleteProductDto) {
+  async update(updateProductDto: UpdateProductDto): Promise<object> {
     try {
-    } catch (error) {}
+      const product = await this.productsRepository.findOne({
+        where: { name: updateProductDto.name, userId: updateProductDto.userId },
+      });
+
+      if (
+        product.name === updateProductDto.name &&
+        product.id !== updateProductDto.id
+      ) {
+        throw new BadRequestException("This product already exists");
+      }
+
+      await this.productsRepository.update(updateProductDto, {
+        where: {
+          id: updateProductDto.id,
+          userId: updateProductDto.userId,
+        },
+      });
+
+      return updateProductDto;
+    } catch (error) {
+      console.log(error);
+
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  //
+  async updateImage(
+    updateProductImageDto: UpdateProductImageDto,
+    image: any
+  ): Promise<string> {
+    try {
+      const product = await this.productsRepository.findOne({
+        where: {
+          id: updateProductImageDto.id,
+          userId: updateProductImageDto.userId,
+        },
+      });
+
+      await this.fileServise.deleteFile(product.img);
+
+      const imageName = await this.fileServise.saveFile(image);
+
+      product.img = imageName;
+
+      await product.save();
+
+      return imageName;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async updatePrice(
+    updateProductPriceDto: UpdateProductImageDto
+  ): Promise<object> {
+    try {
+      const product = await this.productsRepository.update(
+        updateProductPriceDto,
+        {
+          where: {
+            id: updateProductPriceDto.id,
+          },
+        }
+      );
+
+      return product;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
   }
 }

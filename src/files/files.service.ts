@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import * as fs from "fs/promises";
-import { existsSync } from "fs";
+import { existsSync, stat } from "fs";
 import * as path from "path";
 import * as uuid from "uuid";
 
@@ -30,24 +30,34 @@ export class FilesService {
   }
 
   //
-  async deleteFile(fileName: string): Promise<string> {
+  async deleteFile(fileName: string): Promise<object> {
     try {
       // TODO: виправити костиль з шляхом
       const filePath = path.resolve() + "/" + "src/" + fileName;
 
       if (!existsSync(filePath)) {
-        throw new HttpException(
-          "This file does not exist",
-          HttpStatus.METHOD_NOT_ALLOWED
-        );
+        return { message: "This file alreadu exists" };
       }
 
       await fs.unlink(filePath);
-      return "file was deleted";
+      return { success: true };
     } catch (error) {
       console.log(error);
 
       throw new HttpException("", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async checkFileExist(fileName: string): Promise<object> {
+    try {
+      await fs.stat(path.resolve("src", "images", fileName));
+
+      return { success: true };
+    } catch (error) {
+      console.log(error);
+      return {
+        message: error.message,
+      };
     }
   }
 }

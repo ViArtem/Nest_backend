@@ -1,5 +1,8 @@
 import { IsNumber, IsString } from "class-validator";
-export class CreateProductDto {
+export class UpdateProductDto {
+  @IsString({ message: "Value must be a string" })
+  readonly id: string;
+
   @IsString({ message: "Value must be a string" })
   readonly name: string;
 
@@ -10,7 +13,7 @@ export class CreateProductDto {
   readonly img: string;
 
   @IsNumber({}, { message: "Value must be a number" })
-  price: number;
+  readonly price: number;
 
   @IsNumber({}, { message: "Value must be a number" })
   readonly purchasePrice: number;

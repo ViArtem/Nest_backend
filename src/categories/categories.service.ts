@@ -4,6 +4,7 @@ import {
   NotAcceptableException,
   NotFoundException,
   BadRequestException,
+  HttpException,
 } from "@nestjs/common";
 import { Categories } from "./categories.model";
 import { CreateCategoryDto } from "./dto/create-category.dto";
@@ -39,7 +40,8 @@ export class CategoriesService {
         throw new NotAcceptableException(error.parent.sqlMessage);
       }
 
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -69,7 +71,8 @@ export class CategoriesService {
       if (error.name === "SequelizeError") {
         throw new BadRequestException("Invalid request");
       }
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -93,7 +96,8 @@ export class CategoriesService {
       if (error.name === "SequelizeError") {
         throw new BadRequestException("Invalid request");
       }
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -121,7 +125,8 @@ export class CategoriesService {
         throw new NotAcceptableException(error.parent.sqlMessage);
       }
 
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -138,7 +143,21 @@ export class CategoriesService {
         categoryCount,
       };
     } catch (error) {
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async getById(categoryId: string) {
+    try {
+      const category = this.categoryRepository.findOne({
+        where: { id: categoryId },
+      });
+
+      return category;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 }
