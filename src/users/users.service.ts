@@ -67,4 +67,20 @@ export class UsersService {
       throw new HttpException(error.message, error.status);
     }
   }
+
+  async getUserById(id: string) {
+    try {
+      const user = this.userRepository.findOne({
+        where: {
+          id,
+        },
+        include: { all: true },
+      });
+
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
 }

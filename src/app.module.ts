@@ -20,7 +20,9 @@ import { CategoriesController } from "./categories/categories.controller";
 import { ProductsModule } from "./products/products.module";
 import { Products } from "./products/product.model";
 import { ProductsController } from "./products/products.controller";
-import { FilesModule } from './files/files.module';
+import { FilesModule } from "./files/files.module";
+import { RefreshModule } from "./refresh/refresh.module";
+import { Refresh } from "./refresh/refresh.model";
 
 @Module({
   controllers: [],
@@ -36,7 +38,7 @@ import { FilesModule } from './files/files.module';
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DB,
-      models: [User, Role, UserRole, Categories, Products],
+      models: [User, Role, UserRole, Categories, Products, Refresh],
       autoLoadModels: true,
     }),
 
@@ -59,6 +61,7 @@ import { FilesModule } from './files/files.module';
     CategoriesModule,
     ProductsModule,
     FilesModule,
+    RefreshModule,
   ],
 })
 export class AppModule implements NestModule {

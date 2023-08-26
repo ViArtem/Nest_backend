@@ -62,4 +62,9 @@ export class ProductsController {
   updateProductPrice(@Body() updateProductImageDto: UpdateProductImageDto) {
     return this.productService.updatePrice(updateProductImageDto);
   }
+
+  @Post("count")
+  getCategoryCount(@Body() userData: object) {
+    return this.productService.count(userData);
+  }
 }
