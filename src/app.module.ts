@@ -17,7 +17,14 @@ import { CategoriesModule } from "./categories/categories.module";
 import { Categories } from "./categories/categories.model";
 import { GetUserIdFromJwtMiddleware } from "./middlewares/get-id-from-jwt.middleware";
 import { CategoriesController } from "./categories/categories.controller";
-
+import { ProductsModule } from "./products/products.module";
+import { Products } from "./products/product.model";
+import { ProductsController } from "./products/products.controller";
+import { FilesModule } from "./files/files.module";
+import { RefreshModule } from "./refresh/refresh.module";
+import { Refresh } from "./refresh/refresh.model";
+import { StatisticsModule } from "./statistics/statistics.module";
+import { UserStatistics } from "./statistics/statistics.model";
 
 @Module({
   controllers: [],
@@ -33,7 +40,15 @@ import { CategoriesController } from "./categories/categories.controller";
       username: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DB,
-      models: [User, Role, UserRole, Categories],
+      models: [
+        User,
+        Role,
+        UserRole,
+        Categories,
+        Products,
+        Refresh,
+        UserStatistics,
+      ],
       autoLoadModels: true,
     }),
 
@@ -54,10 +69,16 @@ import { CategoriesController } from "./categories/categories.controller";
     ]),
     AuthModule,
     CategoriesModule,
+    ProductsModule,
+    FilesModule,
+    RefreshModule,
+    StatisticsModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(GetUserIdFromJwtMiddleware).forRoutes(CategoriesController);
+    consumer
+      .apply(GetUserIdFromJwtMiddleware)
+      .forRoutes(CategoriesController, ProductsController);
   }
 }

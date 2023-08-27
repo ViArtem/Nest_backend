@@ -1,5 +1,6 @@
 import { IsString } from "class-validator";
-export class DeleteCategoryDto {
+
+export class UpdateImageDto {
   @IsString({ message: "Value must be a string" })
   readonly id: string;
 
@@ -8,7 +9,4 @@ export class DeleteCategoryDto {
 
   @IsString({ message: "Value must be a string" })
   readonly img: string;
-
-  @IsString({ message: "Value must be a string" })
-  readonly name: string;
 }

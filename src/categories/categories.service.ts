@@ -4,21 +4,25 @@ import {
   NotAcceptableException,
   NotFoundException,
   BadRequestException,
+  HttpException,
 } from "@nestjs/common";
 import { Categories } from "./categories.model";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { GetCategoriesDto } from "./dto/get-categories.dto";
 import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
+import { FilesService } from "src/files/files.service";
+import { UpdateImageDto } from "./dto/update-category-image.dto";
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @Inject("CATEGORIES_REPOSITORY")
-    private categoryRepository: typeof Categories
+    private categoryRepository: typeof Categories,
+    private filesService: FilesService
   ) {}
 
-  async create(categoryData: CreateCategoryDto): Promise<object> {
+  async create(categoryData: CreateCategoryDto, image: any): Promise<object> {
     try {
       const checkCategory = await this.categoryRepository.findOne({
         where: {
@@ -30,8 +34,12 @@ export class CategoriesService {
       if (checkCategory) {
         throw new BadRequestException("This category already exists");
       }
+      const fileName = await this.filesService.saveFile(image);
 
-      const category = await this.categoryRepository.create(categoryData);
+      const category = await this.categoryRepository.create({
+        ...categoryData,
+        img: fileName,
+      });
 
       return category;
     } catch (error) {
@@ -39,7 +47,8 @@ export class CategoriesService {
         throw new NotAcceptableException(error.parent.sqlMessage);
       }
 
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -69,7 +78,8 @@ export class CategoriesService {
       if (error.name === "SequelizeError") {
         throw new BadRequestException("Invalid request");
       }
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -87,18 +97,22 @@ export class CategoriesService {
         throw new NotFoundException("Category not found");
       }
 
+      this.filesService.deleteFile(deleteCategoryDto.img);
+
       await category.destroy();
+
       return category;
     } catch (error) {
       if (error.name === "SequelizeError") {
         throw new BadRequestException("Invalid request");
       }
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 
   //
-  async update(updateCategoryDto: UpdateCategoryDto) {
+  async update(updateCategoryDto: UpdateCategoryDto): Promise<object> {
     try {
       const checkCategory = await this.categoryRepository.findOne({
         where: {
@@ -111,7 +125,7 @@ export class CategoriesService {
         throw new BadRequestException("This category already exists");
       }
 
-      const category = await this.categoryRepository.update(updateCategoryDto, {
+      await this.categoryRepository.update(updateCategoryDto, {
         where: { id: updateCategoryDto.id },
       });
 
@@ -121,7 +135,36 @@ export class CategoriesService {
         throw new NotAcceptableException(error.parent.sqlMessage);
       }
 
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  //
+  async updateImage(updateImage: UpdateImageDto, image: any): Promise<object> {
+    try {
+      const category = await this.categoryRepository.findOne({
+        where: {
+          userId: updateImage.userId,
+          id: updateImage.id,
+        },
+      });
+
+      if (!category) {
+        throw new BadRequestException("This category don't exists");
+      }
+
+      await this.filesService.deleteFile(category.img);
+
+      const imageName = await this.filesService.saveFile(image);
+
+      category.img = imageName;
+
+      await category.save();
+      return category;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 
@@ -138,7 +181,22 @@ export class CategoriesService {
         categoryCount,
       };
     } catch (error) {
-      throw error;
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  //
+  async getById(categoryId: string) {
+    try {
+      const category = this.categoryRepository.findOne({
+        where: { id: categoryId },
+      });
+
+      return category;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
     }
   }
 }
