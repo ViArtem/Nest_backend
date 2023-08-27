@@ -34,7 +34,12 @@ import { UserStatistics } from "./statistics/statistics.model";
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
     SequelizeModule.forRoot({
-      dialect: "mysql",
+      dialect: "postgres",
+      dialectOptions: {
+        ssl: {
+          sslmode: true,
+        },
+      },
       host: process.env.MYSQL_HOST,
       port: Number(process.env.MYSQL_PORT),
       username: process.env.MYSQL_USER,
