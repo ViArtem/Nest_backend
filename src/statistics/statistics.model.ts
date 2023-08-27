@@ -5,21 +5,20 @@ import {
   ForeignKey,
   Model,
   Table,
-  HasMany,
 } from "sequelize-typescript";
-import { Products } from "src/products/product.model";
 import { User } from "src/users/users.model";
 
-interface CategoriesCreationAttrs {
+interface StatisticsCreationAttrs {
   id: string;
   userId: string;
-  name: string;
-  markup: number;
-  img: string;
+  count: string;
 }
 
-@Table({ tableName: "categories" })
-export class Categories extends Model<Categories, CategoriesCreationAttrs> {
+@Table({ tableName: "statistics" })
+export class UserStatistics extends Model<
+  UserStatistics,
+  StatisticsCreationAttrs
+> {
   @Column({
     field: "_id",
     type: DataType.STRING,
@@ -29,13 +28,7 @@ export class Categories extends Model<Categories, CategoriesCreationAttrs> {
   id: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  name: string;
-
-  @Column({ type: DataType.INTEGER, allowNull: false })
-  markup: number;
-
-  @Column({ type: DataType.STRING, allowNull: false })
-  img: string;
+  count: string;
 
   @ForeignKey(() => User)
   @Column({ field: "user_id", type: DataType.STRING, allowNull: false })
@@ -43,7 +36,4 @@ export class Categories extends Model<Categories, CategoriesCreationAttrs> {
 
   @BelongsTo(() => User)
   author: User;
-
-  @HasMany(() => Products)
-  categories: Products[];
 }
