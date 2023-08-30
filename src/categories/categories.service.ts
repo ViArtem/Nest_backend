@@ -13,8 +13,10 @@ import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { FilesService } from "src/files/files.service";
 import { UpdateImageDto } from "./dto/update-category-image.dto";
-import { JwtService } from "@nestjs/jwt";
+
 import { RefreshService } from "src/refresh/refresh.service";
+
+import * as uuid from "uuid";
 
 @Injectable()
 export class CategoriesService {
@@ -54,6 +56,7 @@ export class CategoriesService {
       const fileName = await this.filesService.saveFile(image);
 
       const category = await this.categoryRepository.create({
+        id: uuid.v4(),
         ...categoryData,
         img: fileName,
       });

@@ -9,6 +9,7 @@ import { User } from "src/users/users.model";
 import { FilesService } from "src/files/files.service";
 import { CategoriesService } from "src/categories/categories.service";
 import { CategoriesModule } from "src/categories/categories.module";
+import { RefreshModule } from "src/refresh/refresh.module";
 
 @Module({
   providers: [
@@ -23,6 +24,7 @@ import { CategoriesModule } from "src/categories/categories.module";
   imports: [
     SequelizeModule.forFeature([Products, Categories, User]),
     CategoriesModule,
+    RefreshModule,
   ],
   exports: [ProductsService],
 })

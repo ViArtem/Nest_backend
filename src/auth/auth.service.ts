@@ -79,6 +79,19 @@ export class AuthService {
     }
   }
 
+  async logOut(userId: string) {
+    try {
+      await this.refreshService.saveRefreshToDatabase({
+        id: "1",
+        refresh: "user log out",
+        userId,
+      });
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
   //TODO: винести в окремий модуль
   private async generateAccessToken(user: User) {
     try {

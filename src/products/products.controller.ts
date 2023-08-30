@@ -7,7 +7,9 @@ import {
   Put,
   UploadedFile,
   UseInterceptors,
+  Req,
 } from "@nestjs/common";
+import { Request } from "express";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { ProductsService } from "./products.service";
 import { GetAllCategoryProductDto } from "./dto/get-all-category-product.dto";
@@ -24,8 +26,10 @@ export class ProductsController {
   @UseInterceptors(FileInterceptor("image"))
   createProduct(
     @Body() createProductDto: CreateProductDto,
+    @Req() req: Request,
     @UploadedFile() image
   ) {
+    createProductDto.userId = req.cookies.refresh;
     return this.productService.create(createProductDto, image);
   }
 

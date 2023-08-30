@@ -3,6 +3,7 @@ import { User } from "./users.model";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { DeleteUserDto } from "./dto/delete-user.dto";
 import { RolesService } from "src/roles/roles.service";
+import * as uuid from "uuid";
 
 @Injectable()
 export class UsersService {
@@ -13,7 +14,10 @@ export class UsersService {
 
   async createUser(userData: CreateUserDto) {
     try {
-      const user = await this.userRepository.create(userData);
+      const user = await this.userRepository.create({
+        id: uuid.v4(),
+        ...userData,
+      });
       const role = await this.roleServise.getRoleByValue("MANAGER");
 
       await user.$set("roles", [role.id]);

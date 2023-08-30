@@ -14,6 +14,7 @@ import { UpdateProductDto } from "./dto/udate-product.dto";
 
 import * as uuid from "uuid";
 import { CategoriesService } from "src/categories/categories.service";
+import { RefreshService } from "src/refresh/refresh.service";
 
 @Injectable()
 export class ProductsService {
@@ -21,7 +22,8 @@ export class ProductsService {
     @Inject("PRODUCTS_REPOSITORY")
     private productsRepository: typeof Products,
     private filesService: FilesService,
-    private categoryService: CategoriesService
+    private categoryService: CategoriesService,
+    private tokenService: RefreshService
   ) {}
 
   //
@@ -34,6 +36,14 @@ export class ProductsService {
         throw new BadRequestException("Image required");
       }
 
+      //TODO: винести окремо
+      const decodeToken = await this.tokenService.decodeRefresh(
+        createProductDto.userId
+      );
+
+      createProductDto.userId = decodeToken.id;
+
+      //
       const checkProduct = await this.productsRepository.findOne({
         where: { name: createProductDto.name, userId: createProductDto.userId },
       });
