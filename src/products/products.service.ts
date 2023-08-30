@@ -30,6 +30,10 @@ export class ProductsService {
     image: any
   ): Promise<object> {
     try {
+      if (!image) {
+        throw new BadRequestException("Image required");
+      }
+
       const checkProduct = await this.productsRepository.findOne({
         where: { name: createProductDto.name, userId: createProductDto.userId },
       });

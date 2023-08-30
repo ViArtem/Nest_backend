@@ -84,7 +84,7 @@ export class AuthService {
     try {
       const payload = {
         id: user.id,
-        useName: `${user.firstName}  ${user.lastName}`,
+        userName: `${user.firstName}  ${user.lastName}`,
         role: user.roles,
       };
 
