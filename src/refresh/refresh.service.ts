@@ -18,10 +18,12 @@ export class RefreshService {
     try {
       const payload = {
         id: user.id,
-        useName: `${user.firstName}  ${user.lastName}`,
+        userName: `${user.firstName}  ${user.lastName}`,
         role: user.roles,
       };
-      const refresh = this.refreshService.sign(payload);
+      const refresh = this.refreshService.sign(payload, {
+        secret: process.env.REFRESH_KEY,
+      });
 
       return refresh;
     } catch (error) {
@@ -63,6 +65,16 @@ export class RefreshService {
   async getRefreshById(id: string): Promise<object> {
     try {
       return this.refreshRepository.findOne({ where: { id } });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async decodeRefresh(token: string) {
+    try {
+      return await this.refreshService.verify(token, {
+        secret: process.env.REFRESH_KEY,
+      });
     } catch (error) {
       console.log(error);
     }

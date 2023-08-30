@@ -4,7 +4,7 @@ export class CreateCategoryDto {
   readonly id: string;
 
   @IsString({ message: "Value must be a string" })
-  readonly userId: string;
+  userId: string;
 
   @IsString({ message: "Value must be a string" })
   readonly img: string;

@@ -1,8 +1,17 @@
-import { Body, Controller, Post, Res, Get, Req } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Post,
+  Res,
+  Get,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
 import { Response, Request } from "express";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { LogInUserDto } from "./dto/login-user.dto";
 import { AuthService } from "./auth.service";
+import { GetUserIdFromJwtMiddleware } from "src/middlewares/get-id-from-jwt.middleware";
 
 @Controller("auth")
 export class AuthController {
@@ -17,6 +26,12 @@ export class AuthController {
     });
 
     return res.send({ access: tokens.access });
+  }
+
+  @Get("exit")
+  @UseGuards(GetUserIdFromJwtMiddleware)
+  async logOut(@Body() userId: string) {
+    return await this.authService.logOut(userId);
   }
 
   @Post("registration")

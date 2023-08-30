@@ -8,7 +8,9 @@ import {
   UseInterceptors,
   UploadedFile,
   Patch,
+  Req,
 } from "@nestjs/common";
+import { Request } from "express";
 import { CategoriesService } from "./categories.service";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { GetCategoriesDto } from "./dto/get-categories.dto";
@@ -16,14 +18,24 @@ import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateImageDto } from "./dto/update-category-image.dto";
+import { Helpers } from "src/helpers/helpers";
 
 @Controller("category")
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(
+    private readonly categoriesService: CategoriesService
+  ) //private helpers: Helpers
+  {}
 
   @Post("create")
   @UseInterceptors(FileInterceptor("image"))
-  create(@Body() categoryDto: CreateCategoryDto, @UploadedFile() image) {
+  create(
+    @Body() categoryDto: CreateCategoryDto,
+    @UploadedFile() image,
+    @Req() req: Request
+  ) {
+    //this.helpers.getUserIdFromToken(req.cookies.refresh);
+    categoryDto.userId = req.cookies.refresh;
     return this.categoriesService.create(categoryDto, image);
   }
 
