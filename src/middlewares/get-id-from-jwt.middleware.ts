@@ -27,7 +27,7 @@ export class GetUserIdFromJwtMiddleware implements NestMiddleware {
           throw new UnauthorizedException(error.message);
         }
       } else {
-        throw new UnauthorizedException("Refresh token invalid");
+        throw new UnauthorizedException("Refresh token undefined");
       }
 
       next();
