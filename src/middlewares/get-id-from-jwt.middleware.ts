@@ -15,8 +15,6 @@ export class GetUserIdFromJwtMiddleware implements NestMiddleware {
     try {
       const token = req.cookies.refresh;
 
-      console.log(token);
-
       if (token) {
         try {
           const decodedToken = await this.jwtService.verify(token, {

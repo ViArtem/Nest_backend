@@ -86,5 +86,6 @@ export class AppModule implements NestModule {
     consumer
       .apply(GetUserIdFromJwtMiddleware)
       .forRoutes(CategoriesController, ProductsController);
+    consumer.apply(GetUserIdFromJwtMiddleware).forRoutes("auth/logout");
   }
 }
