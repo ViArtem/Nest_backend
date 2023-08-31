@@ -81,11 +81,13 @@ export class AuthService {
 
   async logOut(userId: string) {
     try {
-      return await this.refreshService.saveRefreshToDatabase({
+      await this.refreshService.saveRefreshToDatabase({
         id: "1",
         refresh: "user log out",
         userId,
       });
+
+      return { success: "User is successfully logged out" };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -143,7 +145,7 @@ export class AuthService {
       }
 
       const tokenData = this.jwtService.verify(refreshToken, {
-        secret: process.env.REFRESH_TOKEN,
+        secret: process.env.REFRESH_KEY,
       });
 
       const user = await this.userService.getUserById(tokenData.id);
@@ -152,7 +154,7 @@ export class AuthService {
 
       if (user.refresh.refresh !== refreshToken) {
         throw new UnauthorizedException({
-          message: "Refresh token is not valid 2",
+          message: "Refresh token is not valid",
         });
       }
 

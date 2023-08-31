@@ -11,7 +11,6 @@ import { Response, Request } from "express";
 import { CreateUserDto } from "src/users/dto/create-user.dto";
 import { LogInUserDto } from "./dto/login-user.dto";
 import { AuthService } from "./auth.service";
-import { GetUserIdFromJwtMiddleware } from "src/middlewares/get-id-from-jwt.middleware";
 
 @Controller("auth")
 export class AuthController {
@@ -29,11 +28,8 @@ export class AuthController {
   }
 
   @Get("logout")
-  @UseGuards(GetUserIdFromJwtMiddleware)
   async logOut(@Req() req: Request) {
-    console.log(req.body);
-
-    //return await this.authService.logOut(req.body.userId);
+    return await this.authService.logOut(req.body.userId);
   }
 
   @Post("registration")
