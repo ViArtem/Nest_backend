@@ -81,7 +81,7 @@ export class AuthService {
 
   async logOut(userId: string) {
     try {
-      await this.refreshService.saveRefreshToDatabase({
+      return await this.refreshService.saveRefreshToDatabase({
         id: "1",
         refresh: "user log out",
         userId,

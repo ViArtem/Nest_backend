@@ -28,10 +28,12 @@ export class AuthController {
     return res.send({ access: tokens.access });
   }
 
-  @Get("exit")
+  @Get("logout")
   @UseGuards(GetUserIdFromJwtMiddleware)
-  async logOut(@Body() userId: string) {
-    return await this.authService.logOut(userId);
+  async logOut(@Req() req: Request) {
+    console.log(req.body);
+
+    //return await this.authService.logOut(req.body.userId);
   }
 
   @Post("registration")
