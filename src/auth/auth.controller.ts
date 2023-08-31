@@ -35,6 +35,7 @@ export class AuthController {
     @Req() req: Request
   ) {
     const tokens = await this.authService.registration(regDto);
+
     res.cookie("refresh", tokens.refresh, {
       httpOnly: true,
     });
