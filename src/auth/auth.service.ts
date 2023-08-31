@@ -140,7 +140,7 @@ export class AuthService {
     try {
       if (!refreshToken) {
         throw new UnauthorizedException({
-          message: "Refresh token is not valid",
+          message: "Refresh token is undefined",
         });
       }
 
@@ -151,15 +151,16 @@ export class AuthService {
       const user = await this.userService.getUserById(tokenData.id);
 
       // TODO: переробити з врахуванням що user.refresh буде масивом
+      console.log(refreshToken);
 
-      if (user.refresh.refresh !== refreshToken) {
+      if (user.refresh.dataValues.refresh !== refreshToken) {
         throw new UnauthorizedException({
           message: "Refresh token is not valid",
         });
       }
 
       const access = await this.generateAccessToken(user);
-      const refresh = await this.refreshService.generateRefresh(user);
+      const refresh = this.refreshService.generateRefresh(user);
 
       await this.refreshService.saveRefreshToDatabase({
         id: "1",
@@ -171,7 +172,7 @@ export class AuthService {
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         throw new UnauthorizedException({
-          message: "Refresh token is not valid",
+          message: error.message,
         });
       }
       console.log(error);
