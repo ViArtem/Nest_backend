@@ -11,7 +11,7 @@ async function start() {
 
   // Глобальний пайп використовується для валідації, або зміни даних
   // app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({ origin: process.env.CLIENT_URL });
+  app.enableCors({ origin: process.env.CLIENT_URL, credentials: true });
 
   app.use(cookieParser());
   app.use(urlencoded({ extended: true }));
