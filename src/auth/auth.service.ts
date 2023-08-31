@@ -151,7 +151,6 @@ export class AuthService {
       const user = await this.userService.getUserById(tokenData.id);
 
       // TODO: переробити з врахуванням що user.refresh буде масивом
-      console.log(refreshToken);
 
       if (user.refresh.dataValues.refresh !== refreshToken) {
         throw new UnauthorizedException({
