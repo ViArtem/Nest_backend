@@ -1,4 +1,5 @@
 import {
+  IsDefined,
   IsEmail,
   IsNotEmpty,
   IsOptional,
@@ -22,6 +23,7 @@ export class CreateUserDto {
   @Matches(/^(?!\s*$).+/, {
     message: "Value first name must not consist of only spaces",
   })
+  @IsDefined({ message: "Value first name must be defined" })
   readonly firstName: string;
 
   @IsString({ message: "Value must be a string" })
@@ -29,6 +31,7 @@ export class CreateUserDto {
   @Matches(/^(?!\s*$).+/, {
     message: "Value last name must not consist of only spaces",
   })
+  @IsDefined({ message: "Value last name must be defined" })
   readonly lastName: string;
 
   @IsString({ message: "Value must be a string" })
