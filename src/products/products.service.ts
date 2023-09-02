@@ -10,7 +10,7 @@ import { GetAllCategoryProductDto } from "./dto/get-all-category-product.dto";
 import { DeleteProductDto } from "./dto/delete-product.dto";
 import { FilesService } from "src/files/files.service";
 import { UpdateProductImageDto } from "./dto/update-product-image.dto";
-import { UpdateProductDto } from "./dto/udate-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
 import * as uuid from "uuid";
 import { CategoriesService } from "src/categories/categories.service";
@@ -150,8 +150,20 @@ export class ProductsService {
   async updateImage(
     updateProductImageDto: UpdateProductImageDto,
     image: any
-  ): Promise<string> {
+  ): Promise<object> {
     try {
+      if (!image) {
+        throw new BadRequestException("Image required");
+      }
+
+      //TODO: винести окремо
+      const decodeToken = await this.tokenService.decodeRefresh(
+        updateProductImageDto.userId
+      );
+
+      updateProductImageDto.userId = decodeToken.id;
+
+      //
       const product = await this.productsRepository.findOne({
         where: {
           id: updateProductImageDto.id,
@@ -167,7 +179,7 @@ export class ProductsService {
 
       await product.save();
 
-      return imageName;
+      return product;
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

@@ -16,7 +16,7 @@ import { GetAllCategoryProductDto } from "./dto/get-all-category-product.dto";
 import { DeleteProductDto } from "./dto/delete-product.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateProductImageDto } from "./dto/update-product-image.dto";
-import { UpdateProductDto } from "./dto/udate-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
 @Controller("products")
 export class ProductsController {
@@ -56,8 +56,10 @@ export class ProductsController {
   @UseInterceptors(FileInterceptor("image"))
   updateProductImage(
     @Body() updateProductImageDto: UpdateProductImageDto,
+    @Req() req: Request,
     @UploadedFile() image
   ) {
+    updateProductImageDto.userId = req.cookies.refresh;
     return this.productService.updateImage(updateProductImageDto, image);
   }
 

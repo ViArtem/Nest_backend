@@ -1,11 +1,13 @@
-import {
-  IsDefined,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Matches,
-} from "class-validator";
-export class CreateProductDto {
+import { IsDefined, IsNumber, IsString, Matches } from "class-validator";
+export class UpdateProductDto {
+  @IsString({ message: "Value must be a string" })
+  @Matches(/^(?!\s*$).+/, {
+    message: "Value id must not consist of only spaces",
+  })
+  @IsDefined({ message: "Value id must be defined" })
+  readonly id: string;
+
+  //
   @IsString({ message: "Value must be a string" })
   @Matches(/^(?!\s*$).+/, {
     message: "Value name must not consist of only spaces",
@@ -19,30 +21,20 @@ export class CreateProductDto {
     message: "Value description must not consist of only spaces",
   })
   @IsDefined({ message: "Value description must be defined" })
-  @IsOptional()
   readonly description: string;
 
   //
-  @IsString({ message: "Value must be a string" })
-  @Matches(/^(?!\s*$).+/, {
-    message: "Value img must not consist of only spaces",
-  })
-  @IsDefined({ message: "Value img must be defined" })
-  @IsOptional()
-  readonly img: string;
-
-  //
-  //@IsNumber({}, { message: "Value must be a number" })
+  @IsNumber({}, { message: "Value must be a number" })
   @IsDefined({ message: "Value price must be defined" })
-  price: number;
+  readonly price: number;
 
   //
-  // @IsNumber({}, { message: "Value must be a number" })
+  @IsNumber({}, { message: "Value must be a number" })
   @IsDefined({ message: "Value purchasePrice must be defined" })
   readonly purchasePrice: number;
 
   //
-  //@IsNumber({}, { message: "Value must be a number" })
+  @IsNumber({}, { message: "Value must be a number" })
   @IsDefined({ message: "Value quantity must be defined" })
   readonly quantity: number;
 
@@ -60,6 +52,5 @@ export class CreateProductDto {
     message: "Value userId must not consist of only spaces",
   })
   @IsDefined({ message: "Value userId must be defined" })
-  @IsOptional()
-  userId: string;
+  readonly userId: string;
 }

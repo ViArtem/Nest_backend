@@ -18,6 +18,7 @@ export class CreateCategoryDto {
   @Matches(/^(?!\s*$).+/, {
     message: "Value img must not consist of only spaces",
   })
+  @IsDefined({ message: "Value img must be defined" })
   @IsOptional()
   readonly img: string;
 
