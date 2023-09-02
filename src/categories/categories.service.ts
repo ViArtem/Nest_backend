@@ -89,6 +89,10 @@ export class CategoriesService {
 
       const totalPages = Math.ceil(totalCount / categoriesDto.limit);
 
+      if (categories.length === 0) {
+        return categories;
+      }
+
       if (categoriesDto.page > totalPages) {
         throw new NotFoundException("Page not found");
       }
@@ -147,12 +151,14 @@ export class CategoriesService {
     try {
       const checkCategory = await this.categoryRepository.findOne({
         where: {
-          userId: updateCategoryDto.userId,
-          name: updateCategoryDto.name,
+          id: updateCategoryDto.id,
         },
       });
 
-      if (checkCategory) {
+      if (
+        checkCategory.id !== updateCategoryDto.id &&
+        checkCategory.name === updateCategoryDto.name
+      ) {
         throw new BadRequestException("This category already exists");
       }
 
@@ -174,6 +180,19 @@ export class CategoriesService {
   //
   async updateImage(updateImage: UpdateImageDto, image: any): Promise<object> {
     try {
+      if (!image) {
+        throw new BadRequestException("Image required");
+      }
+
+      // TODO: тут винести окремо зараз роблю щоб фронт мав доступ до функції
+
+      const decodeToken = await this.tokenService.decodeRefresh(
+        updateImage.userId
+      );
+
+      updateImage.userId = decodeToken.id;
+
+      //
       const category = await this.categoryRepository.findOne({
         where: {
           userId: updateImage.userId,

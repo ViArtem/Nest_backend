@@ -23,9 +23,8 @@ import { Helpers } from "src/helpers/helpers";
 @Controller("category")
 export class CategoriesController {
   constructor(
-    private readonly categoriesService: CategoriesService
-  ) //private helpers: Helpers
-  {}
+    private readonly categoriesService: CategoriesService //private helpers: Helpers
+  ) {}
 
   @Post("create")
   @UseInterceptors(FileInterceptor("image"))
@@ -56,7 +55,12 @@ export class CategoriesController {
 
   @UseInterceptors(FileInterceptor("image"))
   @Patch("update/image")
-  updateImage(@Body() updateImageDto: UpdateImageDto, @UploadedFile() image) {
+  updateImage(
+    @Body() updateImageDto: UpdateImageDto,
+    @UploadedFile() image,
+    @Req() req: Request
+  ) {
+    updateImageDto.userId = req.cookies.refresh;
     return this.categoriesService.updateImage(updateImageDto, image);
   }
 
