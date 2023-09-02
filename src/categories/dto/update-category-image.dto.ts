@@ -14,12 +14,12 @@ export class UpdateImageDto {
   })
   @IsDefined({ message: "Value userId must be defined" })
   @IsOptional()
-  readonly userId: string;
+  userId: string;
 
-  @IsString({ message: "Value must be a string" })
-  @Matches(/^(?!\s*$).+/, {
-    message: "Value img must not consist of only spaces",
-  })
-  @IsDefined({ message: "Value img must be defined" })
-  readonly img: string;
+  // @IsString({ message: "Value must be a string" })
+  // @Matches(/^(?!\s*$).+/, {
+  //   message: "Value img must not consist of only spaces",
+  // })
+  // @IsDefined({ message: "Value img must be defined" })
+  // readonly img: string;
 }

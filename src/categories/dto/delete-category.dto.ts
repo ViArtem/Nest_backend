@@ -4,15 +4,11 @@ export class DeleteCategoryDto {
   readonly id: string;
 
   @IsString({ message: "Value must be a string" })
-  @IsOptional()
-  readonly userId: string;
-
-  @IsString({ message: "Value must be a string" })
   @Matches(/^(?!\s*$).+/, {
     message: "Value img must not consist of only spaces",
   })
-  @IsDefined({ message: "Value img must be defined" })
-  readonly img: string;
+  @IsOptional()
+  readonly userId: string;
 
   @IsString({ message: "Value must be a string" })
   @Matches(/^(?!\s*$).+/, {
