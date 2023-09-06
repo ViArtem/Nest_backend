@@ -10,10 +10,11 @@ import { GetAllCategoryProductDto } from "./dto/get-all-category-product.dto";
 import { DeleteProductDto } from "./dto/delete-product.dto";
 import { FilesService } from "src/files/files.service";
 import { UpdateProductImageDto } from "./dto/update-product-image.dto";
-import { UpdateProductDto } from "./dto/udate-product.dto";
+import { UpdateProductDto } from "./dto/update-product.dto";
 
 import * as uuid from "uuid";
 import { CategoriesService } from "src/categories/categories.service";
+import { RefreshService } from "src/refresh/refresh.service";
 
 @Injectable()
 export class ProductsService {
@@ -21,7 +22,8 @@ export class ProductsService {
     @Inject("PRODUCTS_REPOSITORY")
     private productsRepository: typeof Products,
     private filesService: FilesService,
-    private categoryService: CategoriesService
+    private categoryService: CategoriesService,
+    private tokenService: RefreshService
   ) {}
 
   //
@@ -30,6 +32,18 @@ export class ProductsService {
     image: any
   ): Promise<object> {
     try {
+      if (!image) {
+        throw new BadRequestException("Image required");
+      }
+
+      //TODO: винести окремо
+      const decodeToken = await this.tokenService.decodeRefresh(
+        createProductDto.userId
+      );
+
+      createProductDto.userId = decodeToken.id;
+
+      //
       const checkProduct = await this.productsRepository.findOne({
         where: { name: createProductDto.name, userId: createProductDto.userId },
       });
@@ -136,8 +150,20 @@ export class ProductsService {
   async updateImage(
     updateProductImageDto: UpdateProductImageDto,
     image: any
-  ): Promise<string> {
+  ): Promise<object> {
     try {
+      if (!image) {
+        throw new BadRequestException("Image required");
+      }
+
+      //TODO: винести окремо
+      const decodeToken = await this.tokenService.decodeRefresh(
+        updateProductImageDto.userId
+      );
+
+      updateProductImageDto.userId = decodeToken.id;
+
+      //
       const product = await this.productsRepository.findOne({
         where: {
           id: updateProductImageDto.id,
@@ -153,7 +179,7 @@ export class ProductsService {
 
       await product.save();
 
-      return imageName;
+      return product;
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

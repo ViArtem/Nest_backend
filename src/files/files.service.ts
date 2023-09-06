@@ -3,6 +3,7 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import * as fs from "fs/promises";
 import { existsSync } from "fs";
 import * as path from "path";
+
 import * as uuid from "uuid";
 
 @Injectable()
@@ -10,6 +11,7 @@ export class FilesService {
   async saveFile(file: any): Promise<string> {
     try {
       const originalname = file.originalname;
+
       const extension = originalname.split(".").pop();
 
       const fileName = uuid.v4() + "." + extension;
@@ -21,7 +23,8 @@ export class FilesService {
       }
 
       await fs.writeFile(path.join(filePath, fileName), file.buffer);
-      return "images/" + fileName;
+
+      return fileName;
     } catch (error) {
       console.log(error);
 
@@ -33,13 +36,14 @@ export class FilesService {
   async deleteFile(fileName: string): Promise<object> {
     try {
       // TODO: виправити костиль з шляхом
-      const filePath = path.resolve() + "/" + "src/" + fileName;
+      const filePath = path.resolve("src", "images", fileName);
 
       if (!existsSync(filePath)) {
         return { message: "This file alreadu exists" };
       }
 
       await fs.unlink(filePath);
+
       return { success: true };
     } catch (error) {
       console.log(error);

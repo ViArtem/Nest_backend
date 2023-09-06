@@ -9,7 +9,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post("login")
-  async login(@Body() loginDto: LogInUserDto, @Res() res: Response) {
+  async login(@Res() res: Response, @Body() loginDto: LogInUserDto) {
     const tokens = await this.authService.auth(loginDto);
 
     res.cookie("refresh", tokens.refresh, {
@@ -19,6 +19,11 @@ export class AuthController {
     return res.send({ access: tokens.access });
   }
 
+  @Get("logout")
+  async logOut(@Req() req: Request) {
+    return await this.authService.logOut(req.body.userId);
+  }
+
   @Post("registration")
   async registration(@Body() regDto: CreateUserDto, @Res() res: Response) {
     const tokens = await this.authService.registration(regDto);
@@ -26,7 +31,6 @@ export class AuthController {
     res.cookie("refresh", tokens.refresh, {
       httpOnly: true,
     });
-
     return res.send({ access: tokens.access });
   }
 

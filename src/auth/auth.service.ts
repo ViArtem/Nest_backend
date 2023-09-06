@@ -64,7 +64,7 @@ export class AuthService {
       });
 
       const access = await this.generateAccessToken(user);
-      const refresh = await this.refreshService.generateRefresh(user);
+      const refresh = this.refreshService.generateRefresh(user);
 
       await this.refreshService.saveRefreshToDatabase({
         id: "1",
@@ -79,12 +79,27 @@ export class AuthService {
     }
   }
 
+  async logOut(userId: string) {
+    try {
+      await this.refreshService.saveRefreshToDatabase({
+        id: "1",
+        refresh: "user log out",
+        userId,
+      });
+
+      return { success: "User is successfully logged out" };
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
   //TODO: винести в окремий модуль
   private async generateAccessToken(user: User) {
     try {
       const payload = {
         id: user.id,
-        useName: `${user.firstName}  ${user.lastName}`,
+        userName: `${user.firstName}  ${user.lastName}`,
         role: user.roles,
       };
 
@@ -125,26 +140,26 @@ export class AuthService {
     try {
       if (!refreshToken) {
         throw new UnauthorizedException({
-          message: "Refresh token is not valid",
+          message: "Refresh token is undefined",
         });
       }
 
       const tokenData = this.jwtService.verify(refreshToken, {
-        secret: process.env.REFRESH_TOKEN,
+        secret: process.env.REFRESH_KEY,
       });
 
       const user = await this.userService.getUserById(tokenData.id);
 
       // TODO: переробити з врахуванням що user.refresh буде масивом
 
-      if (user.refresh.refresh !== refreshToken) {
+      if (user.refresh.dataValues.refresh !== refreshToken) {
         throw new UnauthorizedException({
-          message: "Refresh token is not valid 2",
+          message: "Refresh token is not valid",
         });
       }
 
       const access = await this.generateAccessToken(user);
-      const refresh = await this.refreshService.generateRefresh(user);
+      const refresh = this.refreshService.generateRefresh(user);
 
       await this.refreshService.saveRefreshToDatabase({
         id: "1",
@@ -156,7 +171,7 @@ export class AuthService {
     } catch (error) {
       if (error.name === "TokenExpiredError") {
         throw new UnauthorizedException({
-          message: "Refresh token is not valid",
+          message: error.message,
         });
       }
       console.log(error);

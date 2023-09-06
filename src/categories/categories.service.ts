@@ -14,16 +14,35 @@ import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { FilesService } from "src/files/files.service";
 import { UpdateImageDto } from "./dto/update-category-image.dto";
 
+import { RefreshService } from "src/refresh/refresh.service";
+
+import * as uuid from "uuid";
+
 @Injectable()
 export class CategoriesService {
   constructor(
     @Inject("CATEGORIES_REPOSITORY")
     private categoryRepository: typeof Categories,
-    private filesService: FilesService
+    private filesService: FilesService,
+    private tokenService: RefreshService
   ) {}
 
   async create(categoryData: CreateCategoryDto, image: any): Promise<object> {
     try {
+      if (!image) {
+        throw new BadRequestException("Image required");
+      }
+
+      // TODO: тут винести окремо зараз роблю щоб фронт мав доступ до функції
+
+      const decodeToken = await this.tokenService.decodeRefresh(
+        categoryData.userId
+      );
+
+      categoryData.userId = decodeToken.id;
+
+      //
+
       const checkCategory = await this.categoryRepository.findOne({
         where: {
           userId: categoryData.userId,
@@ -37,6 +56,7 @@ export class CategoriesService {
       const fileName = await this.filesService.saveFile(image);
 
       const category = await this.categoryRepository.create({
+        id: uuid.v4(),
         ...categoryData,
         img: fileName,
       });
@@ -69,6 +89,10 @@ export class CategoriesService {
 
       const totalPages = Math.ceil(totalCount / categoriesDto.limit);
 
+      if (categories.length === 0) {
+        return categories;
+      }
+
       if (categoriesDto.page > totalPages) {
         throw new NotFoundException("Page not found");
       }
@@ -97,7 +121,18 @@ export class CategoriesService {
         throw new NotFoundException("Category not found");
       }
 
-      this.filesService.deleteFile(deleteCategoryDto.img);
+      const deleteImageFromServerStatus = await this.filesService.deleteFile(
+        category.img
+      );
+
+      if (!deleteImageFromServerStatus) {
+        console.log(deleteImageFromServerStatus);
+
+        throw new HttpException(
+          "Something went wrong when deleting a category",
+          500
+        );
+      }
 
       await category.destroy();
 
@@ -116,12 +151,14 @@ export class CategoriesService {
     try {
       const checkCategory = await this.categoryRepository.findOne({
         where: {
-          userId: updateCategoryDto.userId,
-          name: updateCategoryDto.name,
+          id: updateCategoryDto.id,
         },
       });
 
-      if (checkCategory) {
+      if (
+        checkCategory.id !== updateCategoryDto.id &&
+        checkCategory.name === updateCategoryDto.name
+      ) {
         throw new BadRequestException("This category already exists");
       }
 
@@ -143,6 +180,19 @@ export class CategoriesService {
   //
   async updateImage(updateImage: UpdateImageDto, image: any): Promise<object> {
     try {
+      if (!image) {
+        throw new BadRequestException("Image required");
+      }
+
+      // TODO: тут винести окремо зараз роблю щоб фронт мав доступ до функції
+
+      const decodeToken = await this.tokenService.decodeRefresh(
+        updateImage.userId
+      );
+
+      updateImage.userId = decodeToken.id;
+
+      //
       const category = await this.categoryRepository.findOne({
         where: {
           userId: updateImage.userId,
@@ -172,6 +222,8 @@ export class CategoriesService {
   async count(userIdData: object): Promise<object> {
     try {
       const userId = userIdData["userId"];
+
+      console.log(userId);
 
       const categoryCount = await this.categoryRepository.count({
         where: { userId },

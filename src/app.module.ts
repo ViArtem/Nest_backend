@@ -25,6 +25,8 @@ import { RefreshModule } from "./refresh/refresh.module";
 import { Refresh } from "./refresh/refresh.model";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { UserStatistics } from "./statistics/statistics.model";
+import { Helpers } from "./helpers/helpers";
+import { ApisModule } from './apis/apis.module';
 
 @Module({
   controllers: [],
@@ -34,7 +36,12 @@ import { UserStatistics } from "./statistics/statistics.model";
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
     SequelizeModule.forRoot({
-      dialect: "mysql",
+      dialect: "postgres",
+      dialectOptions: {
+        ssl: {
+          sslmode: true,
+        },
+      },
       host: process.env.MYSQL_HOST,
       port: Number(process.env.MYSQL_PORT),
       username: process.env.MYSQL_USER,
@@ -73,6 +80,7 @@ import { UserStatistics } from "./statistics/statistics.model";
     FilesModule,
     RefreshModule,
     StatisticsModule,
+    ApisModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -80,5 +88,6 @@ export class AppModule implements NestModule {
     consumer
       .apply(GetUserIdFromJwtMiddleware)
       .forRoutes(CategoriesController, ProductsController);
+    consumer.apply(GetUserIdFromJwtMiddleware).forRoutes("auth/logout");
   }
 }
