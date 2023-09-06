@@ -26,6 +26,7 @@ import { Refresh } from "./refresh/refresh.model";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { UserStatistics } from "./statistics/statistics.model";
 import { Helpers } from "./helpers/helpers";
+import { ApisModule } from './apis/apis.module';
 
 @Module({
   controllers: [],
@@ -79,6 +80,7 @@ import { Helpers } from "./helpers/helpers";
     FilesModule,
     RefreshModule,
     StatisticsModule,
+    ApisModule,
   ],
 })
 export class AppModule implements NestModule {

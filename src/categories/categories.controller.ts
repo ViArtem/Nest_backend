@@ -18,7 +18,6 @@ import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateImageDto } from "./dto/update-category-image.dto";
-import { Helpers } from "src/helpers/helpers";
 
 @Controller("category")
 export class CategoriesController {
