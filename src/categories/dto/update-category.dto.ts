@@ -29,7 +29,7 @@ export class UpdateCategoryDto {
   @IsDefined({ message: "Value name must be defined" })
   readonly name: string;
 
-  @IsNumber({}, { message: "Value must be a number" })
+  @IsString({ message: "Value must be a string" })
   @IsDefined({ message: "Value markup must be defined" })
-  readonly markup: number;
+  readonly markup: string;
 }
