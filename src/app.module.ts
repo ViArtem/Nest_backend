@@ -26,7 +26,7 @@ import { Refresh } from "./refresh/refresh.model";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { UserStatistics } from "./statistics/statistics.model";
 import { Helpers } from "./helpers/helpers";
-import { ApisModule } from './apis/apis.module';
+import { ApisModule } from "./apis/apis.module";
 
 @Module({
   controllers: [],
