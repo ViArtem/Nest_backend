@@ -29,8 +29,8 @@ export class CategoriesController {
   @UseInterceptors(FileInterceptor("image"))
   create(
     @Body() categoryDto: CreateCategoryDto,
-    @UploadedFile() image,
-    @Req() req: Request
+    @Req() req: Request,
+    @UploadedFile() image
   ) {
     //this.helpers.getUserIdFromToken(req.cookies.refresh);
     categoryDto.userId = req.cookies.refresh;

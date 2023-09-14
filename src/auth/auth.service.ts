@@ -27,7 +27,7 @@ export class AuthService {
       const user = await this.userValidate(userDto);
 
       const access = await this.generateAccessToken(user);
-      const refresh = await this.refreshService.generateRefresh(user);
+      const refresh = this.refreshService.generateRefresh(user);
 
       await this.refreshService.updateRefreshInDatabase({
         id: "1",
