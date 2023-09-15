@@ -37,7 +37,7 @@ export class CategoriesController {
     return this.categoriesService.create(categoryDto, image);
   }
 
-  @Get("get/all")
+  @Post("get/all")
   getAll(@Body() getCategoriesDto: GetCategoriesDto) {
     return this.categoriesService.getAll(getCategoriesDto);
   }
