@@ -14,9 +14,9 @@ interface ProductsCreationAttrs {
   name: string;
   description: string;
   img: string;
-  price: number;
-  purchasePrice: number;
-  quantity: number;
+  price: number | string;
+  purchasePrice: number | string;
+  quantity: number | string;
   categoryId: string;
 }
 

@@ -61,7 +61,8 @@ export class ProductsService {
 
         createProductDto.price =
           Number(createProductDto.purchasePrice) +
-          (createProductDto.purchasePrice / 100) * Number(category.markup);
+          (Number(createProductDto.purchasePrice) / 100) *
+            Number(category.markup);
       }
 
       const product = await this.productsRepository.create({
