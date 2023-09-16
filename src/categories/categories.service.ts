@@ -61,12 +61,6 @@ export class CategoriesService {
         img: fileName,
       });
 
-      // {
-      //   id: uuid.v4(),
-      //   ...categoryData,
-      //   img: fileName,
-      // }
-
       return category;
     } catch (error) {
       if (error.name === "SequelizeUniqueConstraintError") {

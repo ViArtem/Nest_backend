@@ -30,6 +30,7 @@ import { ApisModule } from "./apis/apis.module";
 import { CustomersModule } from "./customers/customers.module";
 import { OrdersModule } from "./orders/orders.module";
 import { Customers } from "./customers/customers.model";
+import { CustomersController } from "./customers/customers.controller";
 
 @Module({
   controllers: [],
@@ -93,7 +94,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(GetUserIdFromJwtMiddleware)
-      .forRoutes(CategoriesController, ProductsController);
+      .forRoutes(CategoriesController, ProductsController, CustomersController);
     consumer.apply(GetUserIdFromJwtMiddleware).forRoutes("auth/logout");
   }
 }

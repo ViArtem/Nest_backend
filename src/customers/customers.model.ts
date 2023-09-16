@@ -14,6 +14,7 @@ interface CustomersCreationAttrs {
   firstName: string;
   lastName: string;
   addresses: string;
+  contacts: string;
   userId: string;
 }
 
