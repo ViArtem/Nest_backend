@@ -24,7 +24,7 @@ export class CustomersService {
     }
   }
 
-  async getCustomerById(id: string) {
+  async getCustomerById(id: string): Promise<object> {
     try {
       const customer = await this.customersRepository.findOne({
         where: {
@@ -33,6 +33,21 @@ export class CustomersService {
       });
 
       return customer;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async getAllCustomer(userId: string): Promise<object> {
+    try {
+      const customers = await this.customersRepository.findAll({
+        where: {
+          userId,
+        },
+      });
+
+      return customers;
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

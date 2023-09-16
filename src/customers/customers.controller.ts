@@ -15,4 +15,9 @@ export class CustomersController {
   getCustomerById(@Query("id") id: string) {
     return this.customersService.getCustomerById(id);
   }
+
+  @Post("get/all")
+  getAllCustomer(@Body() userData) {
+    return this.customersService.getAllCustomer(userData.userId);
+  }
 }
