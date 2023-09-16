@@ -10,6 +10,7 @@ import { AuthModule } from "src/auth/auth.module";
 import { Categories } from "src/categories/categories.model";
 import { Products } from "src/products/product.model";
 import { UserStatistics } from "src/statistics/statistics.model";
+import { Customers } from "src/customers/customers.model";
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UserStatistics } from "src/statistics/statistics.model";
       Categories,
       Products,
       UserStatistics,
+      Customers,
     ]),
     RolesModule,
     forwardRef(() => AuthModule),

@@ -1,10 +1,4 @@
-import {
-  IsDefined,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Matches,
-} from "class-validator";
+import { IsDefined, IsOptional, IsString, Matches } from "class-validator";
 export class CreateProductDto {
   @IsString({ message: "Value must be a string" })
   @Matches(/^(?!\s*$).+/, {
@@ -34,17 +28,17 @@ export class CreateProductDto {
   //
   //@IsNumber({}, { message: "Value must be a number" })
   @IsDefined({ message: "Value price must be defined" })
-  price: number;
+  price: number | string;
 
   //
   // @IsNumber({}, { message: "Value must be a number" })
   @IsDefined({ message: "Value purchasePrice must be defined" })
-  readonly purchasePrice: number;
+  readonly purchasePrice: number | string;
 
   //
   //@IsNumber({}, { message: "Value must be a number" })
   @IsDefined({ message: "Value quantity must be defined" })
-  readonly quantity: number;
+  readonly quantity: number | string;
 
   //
   @IsString({ message: "Value must be a string" })

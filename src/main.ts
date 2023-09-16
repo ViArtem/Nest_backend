@@ -28,7 +28,7 @@ async function start() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(PORT, () => {
-    console.log("Server started on port");
+    console.log(`Server started on port ${PORT}`);
   });
 }
 

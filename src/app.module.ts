@@ -27,6 +27,9 @@ import { StatisticsModule } from "./statistics/statistics.module";
 import { UserStatistics } from "./statistics/statistics.model";
 import { Helpers } from "./helpers/helpers";
 import { ApisModule } from "./apis/apis.module";
+import { CustomersModule } from "./customers/customers.module";
+import { OrdersModule } from "./orders/orders.module";
+import { Customers } from "./customers/customers.model";
 
 @Module({
   controllers: [],
@@ -55,6 +58,7 @@ import { ApisModule } from "./apis/apis.module";
         Products,
         Refresh,
         UserStatistics,
+        Customers,
       ],
       autoLoadModels: true,
     }),
@@ -81,6 +85,8 @@ import { ApisModule } from "./apis/apis.module";
     RefreshModule,
     StatisticsModule,
     ApisModule,
+    CustomersModule,
+    OrdersModule,
   ],
 })
 export class AppModule implements NestModule {
