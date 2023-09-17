@@ -7,6 +7,8 @@ import {
 import { SequelizeModule } from "@nestjs/sequelize";
 import { UsersModule } from "./users/users.module";
 import { ConfigModule } from "@nestjs/config";
+import { resolve } from "path";
+
 import { User } from "./users/users.model";
 import { ClientsModule, Transport } from "@nestjs/microservices";
 import { RolesModule } from "./roles/roles.module";
@@ -25,12 +27,13 @@ import { RefreshModule } from "./refresh/refresh.module";
 import { Refresh } from "./refresh/refresh.model";
 import { StatisticsModule } from "./statistics/statistics.module";
 import { UserStatistics } from "./statistics/statistics.model";
-import { Helpers } from "./helpers/helpers";
+
 import { ApisModule } from "./apis/apis.module";
 import { CustomersModule } from "./customers/customers.module";
 import { OrdersModule } from "./orders/orders.module";
 import { Customers } from "./customers/customers.model";
 import { CustomersController } from "./customers/customers.controller";
+import { ServeStaticModule } from "@nestjs/serve-static";
 
 @Module({
   controllers: [],
@@ -38,6 +41,10 @@ import { CustomersController } from "./customers/customers.controller";
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: resolve("src", "images"),
+      serveRoot: "/images",
     }),
     SequelizeModule.forRoot({
       dialect: "postgres",
