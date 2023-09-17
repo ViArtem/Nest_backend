@@ -58,14 +58,8 @@ export class CategoriesService {
       const category = await this.categoryRepository.create({
         id: uuid.v4(),
         ...categoryData,
-        img: fileName,
+        image: fileName,
       });
-
-      // {
-      //   id: uuid.v4(),
-      //   ...categoryData,
-      //   img: fileName,
-      // }
 
       return category;
     } catch (error) {
@@ -90,6 +84,7 @@ export class CategoriesService {
             userId: categoriesDto.userId,
           },
           offset,
+          order: [["_id", "ASC"]],
           limit: categoriesDto.limit,
         });
 
@@ -128,7 +123,7 @@ export class CategoriesService {
       }
 
       const deleteImageFromServerStatus = await this.filesService.deleteFile(
-        category.img
+        category.image
       );
 
       if (!deleteImageFromServerStatus) {
@@ -210,11 +205,11 @@ export class CategoriesService {
         throw new BadRequestException("This category don't exists");
       }
 
-      await this.filesService.deleteFile(category.img);
+      await this.filesService.deleteFile(category.image);
 
       const imageName = await this.filesService.saveFile(image);
 
-      category.img = imageName;
+      category.image = imageName;
 
       await category.save();
       return category;

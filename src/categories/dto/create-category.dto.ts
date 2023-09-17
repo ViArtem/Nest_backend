@@ -20,7 +20,7 @@ export class CreateCategoryDto {
   })
   @IsDefined({ message: "Value img must be defined" })
   @IsOptional()
-  readonly img: string;
+  readonly image: string;
 
   @IsString({ message: "Value must be a string" })
   @Matches(/^(?!\s*$).+/, {
