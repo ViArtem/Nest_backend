@@ -68,7 +68,7 @@ export class ProductsService {
       const product = await this.productsRepository.create({
         id: uuid.v4(),
         ...createProductDto,
-        img,
+        image: img,
       });
 
       return product;
@@ -81,11 +81,17 @@ export class ProductsService {
   //
   async getAllByCategory(getAllCategoryProductDto: GetAllCategoryProductDto) {
     try {
+      const offset =
+        (getAllCategoryProductDto.page - 1) * getAllCategoryProductDto.limit;
+
       const products = await this.productsRepository.findAll({
         where: {
           categoryId: getAllCategoryProductDto.categoryId,
           userId: getAllCategoryProductDto.userId,
         },
+        offset,
+        order: [["_id", "ASC"]],
+        limit: getAllCategoryProductDto.limit,
       });
 
       return products;
@@ -106,7 +112,7 @@ export class ProductsService {
         throw new BadRequestException("This product does not exist");
       }
 
-      await this.filesService.deleteFile(checkProduct.img);
+      await this.filesService.deleteFile(checkProduct.image);
 
       await checkProduct.destroy();
 
@@ -172,11 +178,11 @@ export class ProductsService {
         },
       });
 
-      await this.filesService.deleteFile(product.img);
+      await this.filesService.deleteFile(product.image);
 
       const imageName = await this.filesService.saveFile(image);
 
-      product.img = imageName;
+      product.image = imageName;
 
       await product.save();
 

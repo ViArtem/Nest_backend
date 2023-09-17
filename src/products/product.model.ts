@@ -13,7 +13,7 @@ interface ProductsCreationAttrs {
   id: string;
   name: string;
   description: string;
-  img: string;
+  image: string;
   price: number | string;
   purchasePrice: number | string;
   quantity: number | string;
@@ -37,7 +37,7 @@ export class Products extends Model<Products, ProductsCreationAttrs> {
   description: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  img: string;
+  image: string;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
   price: number;
