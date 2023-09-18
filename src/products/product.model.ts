@@ -40,13 +40,13 @@ export class Products extends Model<Products, ProductsCreationAttrs> {
   image: string;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
-  price: number;
+  price: number | string;
 
   @Column({ field: "purchase_price", type: DataType.INTEGER, allowNull: false })
-  purchasePrice: number;
+  purchasePrice: number | string;
 
   @Column({ type: DataType.INTEGER, allowNull: false })
-  quantity: number;
+  quantity: number | string;
 
   @ForeignKey(() => Categories)
   @Column({ field: "category_id", type: DataType.STRING, allowNull: false })

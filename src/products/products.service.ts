@@ -132,6 +132,7 @@ export class ProductsService {
       });
 
       if (
+        product &&
         product.name === updateProductDto.name &&
         product.id !== updateProductDto.id
       ) {
@@ -141,7 +142,6 @@ export class ProductsService {
       await this.productsRepository.update(updateProductDto, {
         where: {
           id: updateProductDto.id,
-          userId: updateProductDto.userId,
         },
       });
 
