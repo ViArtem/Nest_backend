@@ -11,12 +11,18 @@ export class CustomersService {
     private customersRepository: typeof Customers
   ) {}
 
-  async createCustomer(createCustomerDto: CreateCustomerDto): Promise<object> {
+  async createCustomer<T extends Customers>(
+    createCustomerDto: CreateCustomerDto
+  ): Promise<T | object> {
     try {
       const customer = await this.customersRepository.create({
         id: uuid.v4(),
         ...createCustomerDto,
       });
+
+      if (createCustomerDto.getCustomerData) {
+        return customer;
+      }
 
       return {
         error: false,

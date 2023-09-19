@@ -35,6 +35,7 @@ import { Customers } from "./customers/customers.model";
 import { CustomersController } from "./customers/customers.controller";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { Order } from "./orders/order.model";
+import { OrdersController } from "./orders/orders.controller";
 
 @Module({
   controllers: [],
@@ -103,7 +104,12 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(GetUserIdFromJwtMiddleware)
-      .forRoutes(CategoriesController, ProductsController, CustomersController);
+      .forRoutes(
+        CategoriesController,
+        ProductsController,
+        CustomersController,
+        OrdersController
+      );
     consumer.apply(GetUserIdFromJwtMiddleware).forRoutes("auth/logout");
   }
 }

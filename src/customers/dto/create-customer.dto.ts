@@ -1,4 +1,10 @@
-import { IsDefined, IsOptional, IsString, Matches } from "class-validator";
+import {
+  IsBoolean,
+  IsDefined,
+  IsOptional,
+  IsString,
+  Matches,
+} from "class-validator";
 export class CreateCustomerDto {
   @IsString({ message: "Value must be a string" })
   @IsOptional()
@@ -29,6 +35,11 @@ export class CreateCustomerDto {
   })
   @IsDefined({ message: "Value contacts must be defined" })
   contacts: string;
+
+  @IsBoolean({ message: "Value contacts must be a string" })
+  @IsDefined({ message: "Value contacts must be defined" })
+  @IsOptional()
+  getCustomerData?: boolean;
 
   @IsString({ message: "Value userId must be a string" })
   @IsDefined({ message: "Value userId must be defined" })

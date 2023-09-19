@@ -35,7 +35,7 @@ export class CreateOrderDto {
   })
   @IsDefined({ message: "Value customerId must be defined" })
   @IsOptional()
-  readonly customerId?: string;
+  customerId?: string;
 
   @IsString({ message: "Value customerFirstName must be a string" })
   @Matches(/^(?!\s*$).+/, {
