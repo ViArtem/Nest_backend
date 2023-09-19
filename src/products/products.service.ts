@@ -71,7 +71,11 @@ export class ProductsService {
         image: img,
       });
 
-      return product;
+      return {
+        error: false,
+        success: "Product successfully created",
+        statusCode: 201,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -116,7 +120,11 @@ export class ProductsService {
 
       await checkProduct.destroy();
 
-      return checkProduct;
+      return {
+        error: false,
+        success: "Product successfully deleted",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
 
@@ -145,7 +153,11 @@ export class ProductsService {
         },
       });
 
-      return updateProductDto;
+      return {
+        error: false,
+        success: "Product successfully updated",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
 
@@ -186,7 +198,11 @@ export class ProductsService {
 
       await product.save();
 
-      return product;
+      return {
+        error: false,
+        success: "Product image successfully updated",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -206,7 +222,11 @@ export class ProductsService {
         }
       );
 
-      return product;
+      return {
+        error: false,
+        success: "Product price successfully updated",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
