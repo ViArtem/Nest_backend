@@ -9,6 +9,7 @@ import {
 } from "sequelize-typescript";
 import { Categories } from "src/categories/categories.model";
 import { Customers } from "src/customers/customers.model";
+import { Order } from "src/orders/order.model";
 import { Products } from "src/products/product.model";
 import { Refresh } from "src/refresh/refresh.model";
 import { Role } from "src/roles/role.model";
@@ -65,4 +66,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @HasOne(() => UserStatistics)
   statistics: UserStatistics[];
+
+  @HasMany(() => Order)
+  orders: Order[];
 }

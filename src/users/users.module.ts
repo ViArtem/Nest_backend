@@ -11,6 +11,7 @@ import { Categories } from "src/categories/categories.model";
 import { Products } from "src/products/product.model";
 import { UserStatistics } from "src/statistics/statistics.model";
 import { Customers } from "src/customers/customers.model";
+import { Order } from "src/orders/order.model";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { Customers } from "src/customers/customers.model";
       Products,
       UserStatistics,
       Customers,
+      Order,
     ]),
     RolesModule,
     forwardRef(() => AuthModule),

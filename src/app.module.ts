@@ -34,6 +34,7 @@ import { OrdersModule } from "./orders/orders.module";
 import { Customers } from "./customers/customers.model";
 import { CustomersController } from "./customers/customers.controller";
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { Order } from "./orders/order.model";
 
 @Module({
   controllers: [],
@@ -67,6 +68,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
         Refresh,
         UserStatistics,
         Customers,
+        Order,
       ],
       autoLoadModels: true,
     }),
