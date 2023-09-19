@@ -12,7 +12,7 @@ export class OrdersService {
     private customerService: CustomersService
   ) {}
 
-  async create(createOrderDto: CreateOrderDto) {
+  async create(createOrderDto: CreateOrderDto): Promise<object> {
     try {
       if (!createOrderDto.customerId) {
         const newCustomer = await this.customerService.createCustomer<any>({
@@ -37,7 +37,43 @@ export class OrdersService {
         userId: createOrderDto.userId,
       });
 
-      return newOrder;
+      // TODO: змінити кількість доступних продуктів
+      // TODO: додати в продукти можливість їх отримувати по масиву id
+
+      return {
+        error: false,
+        success: "Order successfully created",
+        statusCode: 201,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async getAllOrders(userId: string) {
+    try {
+      const allOrders = await this.orderRepository.findAll({
+        where: { userId },
+      });
+
+      return allOrders;
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async getAllActiveOrders() {
+    try {
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async getAllClosedOrders() {
+    try {
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
