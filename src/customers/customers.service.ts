@@ -17,7 +17,12 @@ export class CustomersService {
         id: uuid.v4(),
         ...createCustomerDto,
       });
-      return customer;
+
+      return {
+        error: false,
+        success: "Customer successfully created",
+        statusCode: 201,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
