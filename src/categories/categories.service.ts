@@ -61,6 +61,14 @@ export class CategoriesService {
         image: fileName,
       });
 
+      if (category) {
+        return {
+          error: false,
+          success: "Сategory successfully created",
+          statusCode: 201,
+        };
+      }
+
       return category;
     } catch (error) {
       if (error.name === "SequelizeUniqueConstraintError") {
@@ -137,7 +145,11 @@ export class CategoriesService {
 
       await category.destroy();
 
-      return category;
+      return {
+        error: false,
+        success: "Сategory successfully deleted",
+        statusCode: 200,
+      };
     } catch (error) {
       if (error.name === "SequelizeError") {
         throw new BadRequestException("Invalid request");
@@ -167,7 +179,11 @@ export class CategoriesService {
         where: { id: updateCategoryDto.id },
       });
 
-      return updateCategoryDto;
+      return {
+        error: false,
+        success: "Сategory successfully updated",
+        statusCode: 200,
+      };
     } catch (error) {
       if (error.name === "SequelizeUniqueConstraintError") {
         throw new NotAcceptableException(error.parent.sqlMessage);
@@ -212,7 +228,12 @@ export class CategoriesService {
       category.image = imageName;
 
       await category.save();
-      return category;
+
+      return {
+        error: false,
+        success: "Сategory image successfully updated",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

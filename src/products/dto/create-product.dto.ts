@@ -23,7 +23,7 @@ export class CreateProductDto {
   })
   @IsDefined({ message: "Value img must be defined" })
   @IsOptional()
-  readonly img: string;
+  readonly image: string;
 
   //
   //@IsNumber({}, { message: "Value must be a number" })

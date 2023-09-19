@@ -68,10 +68,14 @@ export class ProductsService {
       const product = await this.productsRepository.create({
         id: uuid.v4(),
         ...createProductDto,
-        img,
+        image: img,
       });
 
-      return product;
+      return {
+        error: false,
+        success: "Product successfully created",
+        statusCode: 201,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -81,11 +85,17 @@ export class ProductsService {
   //
   async getAllByCategory(getAllCategoryProductDto: GetAllCategoryProductDto) {
     try {
+      const offset =
+        (getAllCategoryProductDto.page - 1) * getAllCategoryProductDto.limit;
+
       const products = await this.productsRepository.findAll({
         where: {
           categoryId: getAllCategoryProductDto.categoryId,
           userId: getAllCategoryProductDto.userId,
         },
+        offset,
+        order: [["_id", "ASC"]],
+        limit: getAllCategoryProductDto.limit,
       });
 
       return products;
@@ -106,11 +116,15 @@ export class ProductsService {
         throw new BadRequestException("This product does not exist");
       }
 
-      await this.filesService.deleteFile(checkProduct.img);
+      await this.filesService.deleteFile(checkProduct.image);
 
       await checkProduct.destroy();
 
-      return checkProduct;
+      return {
+        error: false,
+        success: "Product successfully deleted",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
 
@@ -126,6 +140,7 @@ export class ProductsService {
       });
 
       if (
+        product &&
         product.name === updateProductDto.name &&
         product.id !== updateProductDto.id
       ) {
@@ -135,11 +150,14 @@ export class ProductsService {
       await this.productsRepository.update(updateProductDto, {
         where: {
           id: updateProductDto.id,
-          userId: updateProductDto.userId,
         },
       });
 
-      return updateProductDto;
+      return {
+        error: false,
+        success: "Product successfully updated",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
 
@@ -172,15 +190,19 @@ export class ProductsService {
         },
       });
 
-      await this.filesService.deleteFile(product.img);
+      await this.filesService.deleteFile(product.image);
 
       const imageName = await this.filesService.saveFile(image);
 
-      product.img = imageName;
+      product.image = imageName;
 
       await product.save();
 
-      return product;
+      return {
+        error: false,
+        success: "Product image successfully updated",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);
@@ -200,7 +222,11 @@ export class ProductsService {
         }
       );
 
-      return product;
+      return {
+        error: false,
+        success: "Product price successfully updated",
+        statusCode: 200,
+      };
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

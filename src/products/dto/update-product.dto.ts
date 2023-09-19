@@ -24,19 +24,19 @@ export class UpdateProductDto {
   readonly description: string;
 
   //
-  @IsNumber({}, { message: "Value must be a number" })
+
   @IsDefined({ message: "Value price must be defined" })
-  readonly price: number;
+  readonly price: number | string;
 
   //
-  @IsNumber({}, { message: "Value must be a number" })
+
   @IsDefined({ message: "Value purchasePrice must be defined" })
-  readonly purchasePrice: number;
+  readonly purchasePrice: number | string;
 
   //
-  @IsNumber({}, { message: "Value must be a number" })
+
   @IsDefined({ message: "Value quantity must be defined" })
-  readonly quantity: number;
+  readonly quantity: number | string;
 
   //
   @IsString({ message: "Value must be a string" })
