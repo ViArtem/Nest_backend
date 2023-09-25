@@ -17,7 +17,7 @@ class Product {
   count: number;
 
   @IsDefined({ message: "specialPrice must be defined" })
-  specialPrice: string;
+  price: string;
 }
 
 export class CreateOrderDto {

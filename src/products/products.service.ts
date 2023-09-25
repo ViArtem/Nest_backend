@@ -15,6 +15,14 @@ import { UpdateProductDto } from "./dto/update-product.dto";
 import * as uuid from "uuid";
 import { CategoriesService } from "src/categories/categories.service";
 import { RefreshService } from "src/refresh/refresh.service";
+import { Op } from "sequelize";
+
+interface ProductItem {
+  productId: string;
+  name: string;
+  count: number;
+  price: number;
+}
 
 @Injectable()
 export class ProductsService {
@@ -244,6 +252,49 @@ export class ProductsService {
       return {
         productCount,
       };
+    } catch (error) {
+      console.log(error);
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  async changeCount(productsArray: Array<ProductItem>): Promise<any> {
+    try {
+      const productMap: { [key: string]: Products } = {};
+
+      const productIds = productsArray.map((item) => item.productId);
+
+      // Отримуємо всі продукти з бази даних, які мають productId зі списку
+      const products = await this.productsRepository.findAll({
+        where: {
+          id: {
+            [Op.in]: productIds,
+          },
+        },
+      });
+
+      for (const product of products) {
+        productMap[product.id] = product;
+      }
+
+      // Тепер ми можемо швидко звертатися до продуктів за їхніми productId
+      for (const cartItem of productsArray) {
+        const product = productMap[cartItem.productId];
+
+        if (product) {
+          // const updatedQuantity = product.quantity - cartItem.count;
+          // Перевірка на від'ємну кількість товару (за потреби)
+          // if (updatedQuantity >= 0) {
+          //   await product.update({ quantity: updatedQuantity });
+          // } else {
+          //   throw new Error(
+          //     `Not enough quantity for product ${product.productId}`
+          //   );
+          // }
+        }
+      }
+
+      return;
     } catch (error) {
       console.log(error);
       throw new HttpException(error.message, error.status);

@@ -64,7 +64,7 @@ export class CategoriesService {
       if (category) {
         return {
           error: false,
-          success: "Сategory successfully created",
+          success: "Category successfully created",
           statusCode: 201,
         };
       }
@@ -147,7 +147,7 @@ export class CategoriesService {
 
       return {
         error: false,
-        success: "Сategory successfully deleted",
+        success: "Category successfully deleted",
         statusCode: 200,
       };
     } catch (error) {
@@ -181,7 +181,7 @@ export class CategoriesService {
 
       return {
         error: false,
-        success: "Сategory successfully updated",
+        success: "Category successfully updated",
         statusCode: 200,
       };
     } catch (error) {
@@ -231,7 +231,7 @@ export class CategoriesService {
 
       return {
         error: false,
-        success: "Сategory image successfully updated",
+        success: "Category image successfully updated",
         statusCode: 200,
       };
     } catch (error) {

@@ -12,7 +12,6 @@ import { User } from "src/users/users.model";
 interface OrderCreationAttrs {
   id: string;
   customerId: string;
-  productsIds: string[];
   isActive: boolean;
   userId: string;
 }
@@ -29,9 +28,6 @@ export class Order extends Model<Order, OrderCreationAttrs> {
 
   @Column({ type: DataType.STRING, allowNull: false })
   customerId: string;
-
-  @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
-  productsIds: string[];
 
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   isActive: boolean;
