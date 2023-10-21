@@ -6,6 +6,7 @@ import { ValidationPipe } from "@nestjs/common";
 import * as cookieParser from "cookie-parser";
 import { urlencoded } from "express";
 import { useContainer } from "class-validator";
+import { JwtAuthGuard } from "./auth/jwt-auth-guard";
 
 async function start() {
   const PORT = process.env.PORT || 5000;
@@ -19,6 +20,8 @@ async function start() {
       transform: true,
     })
   );
+
+  //app.useGlobalGuards(JwtAuthGuard);
 
   app.enableCors({ origin: process.env.CLIENT_URL, credentials: true });
 

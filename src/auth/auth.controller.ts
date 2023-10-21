@@ -20,8 +20,10 @@ export class AuthController {
   }
 
   @Get("logout")
-  async logOut(@Req() req: Request) {
-    return await this.authService.logOut(req.body.userId);
+  async logOut(@Req() req: Request, @Res() res: Response) {
+    await this.authService.logOut(req.body.userId);
+
+    return res.clearCookie("refresh");
   }
 
   @Post("registration")
@@ -43,6 +45,7 @@ export class AuthController {
     res.cookie("refresh", tokens.refresh, {
       httpOnly: true,
     });
+
     return res.send({ access: tokens.access });
   }
 }

@@ -9,6 +9,7 @@ import {
   UploadedFile,
   Patch,
   Req,
+  UseGuards,
 } from "@nestjs/common";
 import { Request } from "express";
 import { CategoriesService } from "./categories.service";
@@ -18,8 +19,10 @@ import { DeleteCategoryDto } from "./dto/delete-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateImageDto } from "./dto/update-category-image.dto";
+import { JwtAuthGuard } from "src/auth/jwt-auth-guard";
 
 @Controller("category")
+@UseGuards(JwtAuthGuard)
 export class CategoriesController {
   constructor(
     private readonly categoriesService: CategoriesService //private helpers: Helpers
@@ -39,6 +42,8 @@ export class CategoriesController {
 
   @Post("get/all")
   getAll(@Body() getCategoriesDto: GetCategoriesDto) {
+    console.log(getCategoriesDto);
+
     return this.categoriesService.getAll(getCategoriesDto);
   }
 

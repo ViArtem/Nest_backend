@@ -13,7 +13,7 @@ import { RefreshModule } from "src/refresh/refresh.module";
     JwtModule.register({
       secret: process.env.ACCESS_KEY || "SeCrET",
       signOptions: {
-        expiresIn: "15m",
+        expiresIn: "15s",
       },
     }),
     forwardRef(() => RefreshModule),

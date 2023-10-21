@@ -19,7 +19,7 @@ import { User } from "src/users/users.model";
     JwtModule.register({
       secret: process.env.REFRESH_KEY || "SeCrET",
       signOptions: {
-        expiresIn: "30d",
+        expiresIn: "30s",
       },
     }),
   ],

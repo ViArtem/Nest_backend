@@ -14,13 +14,11 @@ export class GetUserIdFromJwtMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       const token = req.cookies.refresh;
-
       if (token) {
         try {
           const decodedToken = await this.jwtService.verify(token, {
             secret: process.env.REFRESH_KEY,
           });
-
           req.body = { ...req.body, userId: decodedToken.id };
         } catch (error) {
           console.log(error);
@@ -29,7 +27,6 @@ export class GetUserIdFromJwtMiddleware implements NestMiddleware {
       } else {
         throw new UnauthorizedException("Refresh token undefined");
       }
-
       next();
     } catch (error) {
       console.log(error);

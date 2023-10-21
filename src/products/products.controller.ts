@@ -8,6 +8,7 @@ import {
   UploadedFile,
   UseInterceptors,
   Req,
+  UseGuards,
 } from "@nestjs/common";
 import { Request } from "express";
 import { CreateProductDto } from "./dto/create-product.dto";
@@ -17,8 +18,10 @@ import { DeleteProductDto } from "./dto/delete-product.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { UpdateProductImageDto } from "./dto/update-product-image.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";
+import { JwtAuthGuard } from "src/auth/jwt-auth-guard";
 
 @Controller("products")
+@UseGuards(JwtAuthGuard)
 export class ProductsController {
   constructor(private productService: ProductsService) {}
 
